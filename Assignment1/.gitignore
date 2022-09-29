@@ -1,0 +1,4 @@
+nasm_progtxt
+nasm_progtxt.o
+prog_copy.txt
+__pycache__*

@@ -1,0 +1,34 @@
+expr
+    : NUM IDENTIFIER EQ expr SEMICOLON
+    : IDENTIFIER EQ expr SEMICOLON
+    : term ((PLUS | MINUS) term)* SEMICOLON
+
+term
+    : factor (MUL | DIV) factor)* SEMICOLON
+
+factor
+    : (PLUS | MINUS) factor
+    : LPAREN expr RPAREN
+
+atom
+    : print
+
+print  
+    : WRITE (NUMBER | IDENTIFIER) SEMICOLON
+
+
+
+
+
+
+
+
+
+
+
+
+variable declaration or assignment 
+    = IDENTIFIER EQ (NUMBER | IDENTIFIER)
+    = NUM IDENTIFIER EQ NUMBER SEMICOLON
+    = NUM IDENTIFIER EQ (NUMBER | IDENTIFIER) (PLUS | MINUS |
+        MUL | DIV) (NUMBER | IDENTIFIER) SEMICOLON
