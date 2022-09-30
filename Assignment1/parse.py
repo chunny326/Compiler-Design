@@ -35,7 +35,7 @@ class Parser:
         if self.cur_token.type != TokenType.EOF:
             self.raise_error()
         
-        return result
+        return self.cur_token
 
     def expr(self):
         global checking_num

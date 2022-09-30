@@ -14,6 +14,6 @@ f = File(res)
 f.init_file()
 
 parser = Parser(tokens, f)
-tree = parser.parse()
+parser.parse() 
 
 f.finish_file()
