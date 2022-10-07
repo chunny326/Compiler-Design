@@ -1,4 +1,4 @@
-# Compiler-Design
+# Compiler Design - CS 6820
 
 ## Assignment 1 - Initial End-to-End Compiler
 
