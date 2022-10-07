@@ -1,6 +1,6 @@
 # Compiler-Design
 
-## Assignment 1
+## Assignment 1 - Initial End-to-End Compiler
 
 Instructions for running:
   
@@ -14,7 +14,7 @@ The file nasm_progtxt.asm will be generated and the output of running this file 
   
 -------------------------------------------------------------------------------------------------
 
-## Assignment 2
+## Assignment 2 - LL1 Tokenization and Parsing
 
 Instructions for running:
   
