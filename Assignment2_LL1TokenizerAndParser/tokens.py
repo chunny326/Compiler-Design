@@ -14,10 +14,12 @@ class TokenType(Enum):
     RPAREN     = 9
     SEMICOLON  = 10
     EOF        = 11
+    NEWLINE    = 12
+    EMPTY      = 13
 
     # keywords
-    NUM        = 12
-    WRITE      = 13
+    NUM        = 14
+    WRITE      = 15
 
 @dataclass
 class Token:
@@ -29,7 +31,7 @@ class Token:
 
     def checkIfKeyword(tokenText):
         for kind in TokenType:
-            # 12 and 13 below will change as more keywords are added
-            if kind.name.lower() == tokenText and kind.value >= 12 and kind.value <= 13:
+            # 14 and 15 below will change as more keywords are added
+            if kind.name.lower() == tokenText and kind.value >= 14 and kind.value <= 15:
                 return kind
         return None

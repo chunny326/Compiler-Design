@@ -1,6 +1,6 @@
 from tokens import Token, TokenType
 
-WHITESPACE = ' \n\t'
+WHITESPACE = ' \t'
 DIGITS     = '0123456789'
 
 class Lexer:
@@ -23,6 +23,9 @@ class Lexer:
             elif self.cur_char.isalpha():
                 # leading character is a letter, so this is an identifier or keyword
                 yield self.gen_alpha()
+            elif self.cur_char == '\n':
+                self.advance()
+                yield Token(TokenType.NEWLINE)
             elif self.cur_char == '+':
                 self.advance()
                 yield Token(TokenType.PLUS)
@@ -60,8 +63,8 @@ class Lexer:
         self.advance()
         
         # keep reading and appending until no longer reading alphanumeric character
-        while alpha_str.isalnum():
-            if self.cur_char != None and self.cur_char.isalnum():
+        while True:
+            if self.cur_char != None and (self.cur_char.isalnum() or self.cur_char == '_'):
                 alpha_str += self.cur_char
                 self.advance()
             else:

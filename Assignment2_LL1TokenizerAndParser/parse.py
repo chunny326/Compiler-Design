@@ -1,6 +1,5 @@
 from tokens import TokenType
 from nodes import *
-from interpreter import Interpreter
 from vals import *
 
 checking_num = False   # distinguish between NUM and IDENTIFIER lines

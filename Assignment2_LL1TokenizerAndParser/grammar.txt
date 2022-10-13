@@ -1,34 +1,34 @@
-expr
-    : NUM IDENTIFIER EQ expr SEMICOLON
-    : IDENTIFIER EQ expr SEMICOLON
-    : term ((PLUS | MINUS) term)* SEMICOLON
+Goal   -> Expr
+Expr   -> Term Expr'
+Expr'  -> + Term Expr'
+Expr'  -> - Term Expr'
+Expr'  -> e
+Term   -> Factor Term'
+Term'  -> * Factor Term'
+Term'  -> / Factor Term'
+Term'  -> e
+Factor -> ( Expr )
+Factor -> num
+Factor -> name
 
-term
-    : factor (MUL | DIV) factor)* SEMICOLON
+^ -> A
+A -> CB
+B -> +CB
+B -> -CB
+B -> !
+C -> ED
+D -> *ED
+D -> /ED
+D -> !
+E -> (A)
+E -> x
+E -> n
 
-factor
-    : (PLUS | MINUS) factor
-    : LPAREN expr RPAREN
-
-atom
-    : print
-
-print  
-    : WRITE (NUMBER | IDENTIFIER) SEMICOLON
-
-
-
-
-
-
-
-
-
-
-
-
-variable declaration or assignment 
-    = IDENTIFIER EQ (NUMBER | IDENTIFIER)
-    = NUM IDENTIFIER EQ NUMBER SEMICOLON
-    = NUM IDENTIFIER EQ (NUMBER | IDENTIFIER) (PLUS | MINUS |
-        MUL | DIV) (NUMBER | IDENTIFIER) SEMICOLON
+# productions = {
+#     "Goal": ["Expr"],
+#     "Expr": ["Term", "Expr'"],
+#     "Expr'": [["+", "Term", "Expr'"], ["-", "Term", "Expr'"], ["empty"]],
+#     "Term": ["Factor", "Term'"],
+#     "Term'": [["*", "Factor", "Term'"], ["/", "Factor", "Term'"], ["empty"]],
+#     "Factor": [["(", "Expr", ")"], ["num"], ["name"]]
+# }
