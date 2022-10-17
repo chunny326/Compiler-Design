@@ -17,7 +17,8 @@ class Grammar:
     @property
     def nonterminals(self):
         # set of nonterminals and associated rules
-        return set(nt for nt, _ in self.rules)
+        nonterminals = set(nt for nt, _ in self.rules)
+        return sorted(nonterminals)
         
     @property
     def terminals(self):

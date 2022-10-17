@@ -11,6 +11,7 @@ Factor -> ( Expr )
 Factor -> num
 Factor -> name
 
+# productions converted to below
 ^ -> A
 A -> CB
 B -> +CB
@@ -23,6 +24,8 @@ D -> !
 E -> (A)
 E -> x
 E -> n
+! is the epsilon
+f is EOF
 
 # productions = {
 #     "Goal": ["Expr"],
