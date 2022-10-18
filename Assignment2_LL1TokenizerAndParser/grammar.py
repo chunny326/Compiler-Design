@@ -30,5 +30,5 @@ class Grammar:
                 if not self.is_nonterminal(symbol)
                 )
         # add in eof because not included in grammar
-        t.add('eof')
+        t.add('f')
         return t

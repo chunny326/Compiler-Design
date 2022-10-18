@@ -19,7 +19,7 @@ def find_first(grammar):
         
         # FIRST set
         for nt, expression in grammar.rules:
-            if '!' not in expression and 'eof' not in expression:
+            if '!' not in expression and 'f' not in expression:
                 if '!' in first[expression[0]]:
                     rhs = deepcopy(first[expression[0]].remove('!'))
                 else:
@@ -86,7 +86,30 @@ def find_first_plus(first, follow, grammar):
             first_plus.append(temp[expression[0]])
     return first_plus
 
+def get_index_of_containing_tuple(lst: tuple, item):
+    try:
+        return next(ind for ind, tup in enumerate(lst) if item in tup)
+    except Exception:
+        return -1
+
 def construct_table(first_plus, grammar):
-    for nt in grammar.nonterminals:
-        for t in grammar.terminals:
-            pass
+    table = {}
+    terminals = deepcopy(grammar.terminals)
+    terminals.remove('!')
+    order_nonterminals = [5, 0, 1, 2, 3, 4]
+    nonterminals = [grammar.nonterminals[i] for i in order_nonterminals]
+    for nt in nonterminals:
+        for t in terminals:
+            table[(nt, t)] = -1
+    
+    i = 0
+    for nt, expression in grammar.rules:
+        for w in first_plus[i]:
+            if w in terminals:
+                table[(nt, w)] = i
+
+        if 'f' in first_plus[i]:
+            table[(nt, 'f')] = i
+        
+        i = i + 1
+    return table
