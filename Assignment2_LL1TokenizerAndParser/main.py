@@ -35,12 +35,6 @@ if __name__ == "__main__":
     follow['Term'] = follow.pop('C')
     follow['Term\''] = follow.pop('D')
     follow['Factor'] = follow.pop('E')
-    # table['Goal'] = table.pop('^')
-    # table['Expr'] = table.pop('A')
-    # table['Expr\''] = table.pop('B')
-    # table['Term'] = table.pop('C')
-    # table['Term\''] = table.pop('D')
-    # table['Factor'] = table.pop('E')
 
     print('\nf = eof')
     print('! = epsilon')

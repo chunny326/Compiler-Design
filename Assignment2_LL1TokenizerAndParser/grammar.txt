@@ -1,3 +1,4 @@
+# Book productions
 Goal   -> Expr
 Expr   -> Term Expr'
 Expr'  -> + Term Expr'
@@ -11,7 +12,37 @@ Factor -> ( Expr )
 Factor -> num
 Factor -> name
 
-# productions converted to below
+# Book productions converted to below
+^ -> A
+A -> CB
+B -> +CB
+B -> -CB
+B -> !
+C -> ED
+D -> *ED
+D -> /ED
+D -> !
+E -> (A)
+E -> x
+E -> n
+! is the epsilon
+f is EOF
+
+# Modified productions
+Goal   -> Expr
+Expr   -> Term Expr'
+Expr'  -> + Term Expr'
+Expr'  -> - Term Expr'
+Expr'  -> e
+Term   -> Factor Term'
+Term'  -> * Factor Term'
+Term'  -> / Factor Term'
+Term'  -> e
+Factor -> ( Expr )
+Factor -> num
+Factor -> name
+
+# Modified productions converted to below
 ^ -> A
 A -> CB
 B -> +CB
