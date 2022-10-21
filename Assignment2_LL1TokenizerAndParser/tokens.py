@@ -2,24 +2,25 @@ from enum import Enum
 from dataclasses import dataclass
 
 class TokenType(Enum):
-    IDENTIFIER = 0
-    NUMBER     = 1
-    PLUS       = 2
-    MINUS      = 3
-    MUL        = 4
-    DIV        = 5
-    POW        = 6
-    EQ         = 7
-    LPAREN     = 8
-    RPAREN     = 9
-    SEMICOLON  = 10
-    EOF        = 11
-    NEWLINE    = 12
-    EMPTY      = 13
+    IDENTIFIER = 'name'
+    NUMBER     = 'num'
+    PLUS       = '+'
+    MINUS      = '-'
+    MUL        = '*'
+    DIV        = '/'
+    POW        = '^'
+    EQ         = '='
+    LPAREN     = '('
+    RPAREN     = ')'
+    SEMICOLON  = ';'
+    EOF        = 'f'
+    NEWLINE    = 'eof'
+    EMPTY      = ' '
+    DECIMAL    = '.'
 
     # keywords
-    NUM        = 14
-    WRITE      = 15
+    NUM        = 15
+    WRITE      = 16
 
 @dataclass
 class Token:
@@ -32,6 +33,6 @@ class Token:
     def checkIfKeyword(tokenText):
         for kind in TokenType:
             # 14 and 15 below will change as more keywords are added
-            if kind.name.lower() == tokenText and kind.value >= 14 and kind.value <= 15:
+            if kind.name.lower() == tokenText and (kind.value == 15 or kind.value == 16):
                 return kind
         return None

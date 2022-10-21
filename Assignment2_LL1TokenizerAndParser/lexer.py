@@ -7,6 +7,7 @@ class Lexer:
     def __init__(self, text):
         self.text = iter(text)
         self.advance()
+        self.line_count = 0
 
     def advance(self):
         try:
@@ -25,6 +26,7 @@ class Lexer:
                 yield self.gen_alpha()
             elif self.cur_char == '\n':
                 self.advance()
+                self.line_count = self.line_count + 1
                 yield Token(TokenType.NEWLINE)
             elif self.cur_char == '+':
                 self.advance()
@@ -50,11 +52,19 @@ class Lexer:
             elif self.cur_char == ')':
                 self.advance()
                 yield Token(TokenType.RPAREN)
+            elif self.cur_char == '.':
+                self.advance()
+                yield Token(TokenType.DECIMAL)
             elif self.cur_char == ';':
                 self.advance()
                 yield Token(TokenType.SEMICOLON)
             else:
-                raise Exception(f"Illegal character '{self.cur_char}'")
+                self.line_count = self.line_count + 1
+                print("Illegal character found: ", self.cur_char)
+                print("Line ", self.line_count, " is invalid\n")
+                while (self.cur_char != '\n'):
+                    self.advance()
+                self.advance()
         
         yield Token(TokenType.EOF)
 

@@ -3,66 +3,31 @@ Goal   -> Expr
 Expr   -> Term Expr'
 Expr'  -> + Term Expr'
 Expr'  -> - Term Expr'
-Expr'  -> e
+Expr'  -> eps
 Term   -> Factor Term'
 Term'  -> * Factor Term'
 Term'  -> / Factor Term'
-Term'  -> e
+Term'  -> eps
 Factor -> ( Expr )
 Factor -> num
 Factor -> name
-
-# Book productions converted to below
-^ -> A
-A -> CB
-B -> +CB
-B -> -CB
-B -> !
-C -> ED
-D -> *ED
-D -> /ED
-D -> !
-E -> (A)
-E -> x
-E -> n
-! is the epsilon
-f is EOF
 
 # Modified productions
 Goal   -> Expr
 Expr   -> Term Expr'
 Expr'  -> + Term Expr'
 Expr'  -> - Term Expr'
-Expr'  -> e
-Term   -> Factor Term'
-Term'  -> * Factor Term'
-Term'  -> / Factor Term'
-Term'  -> e
+Expr'  -> eps
+Term   -> Ex Term'
+Term'  -> * Ex Term'
+Term'  -> / Ex Term'
+Term'  -> eps
+Ex     -> Factor Ex'
+Ex'    -> ^ Ex' Factor
+Ex'    -> eps
 Factor -> ( Expr )
+Factor -> - Neg
 Factor -> num
 Factor -> name
-
-# Modified productions converted to below
-^ -> A
-A -> CB
-B -> +CB
-B -> -CB
-B -> !
-C -> ED
-D -> *ED
-D -> /ED
-D -> !
-E -> (A)
-E -> x
-E -> n
-! is the epsilon
-f is EOF
-
-# productions = {
-#     "Goal": ["Expr"],
-#     "Expr": ["Term", "Expr'"],
-#     "Expr'": [["+", "Term", "Expr'"], ["-", "Term", "Expr'"], ["empty"]],
-#     "Term": ["Factor", "Term'"],
-#     "Term'": [["*", "Factor", "Term'"], ["/", "Factor", "Term'"], ["empty"]],
-#     "Factor": [["(", "Expr", ")"], ["num"], ["name"]]
-# }
+Neg    -> num
+Neg    -> name

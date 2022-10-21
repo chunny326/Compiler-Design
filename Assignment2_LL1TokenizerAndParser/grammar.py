@@ -1,34 +1,29 @@
 class Grammar:
     # take variable number of grammar rules, produce tuple of all rules
     def __init__(self, *rules):
-        self.rules = tuple(self.combine(rule) for rule in rules)
+        self.rules = {}
+        for rule in rules:
+            if rule.split('->')[0] not in self.rules:
+                self.rules[rule.split('->')[0]] = [rule.split('->')[1].split(' ')]
+            else:
+                self.rules[rule.split('->')[0]].append(rule.split('->')[1].split(' '))
+
+        self.nonterminals = self.nonterms()
+        self.terminals = self.terms()
 
     def __repr__(self):
         return (f"{self.rules}" if self.rules != None else "")
-
-    def combine(self, rule):
-        return tuple(rule.replace(' ', '').split('->'))
-
-    @staticmethod
-    def is_nonterminal(symbol):
-        # alphanumeric, uppercase letters are nonterminals
-        return symbol.isalpha() and symbol.isupper()
         
-    @property
-    def nonterminals(self):
+    def nonterms(self):
         # set of nonterminals and associated rules
-        nonterminals = set(nt for nt, _ in self.rules)
-        return sorted(nonterminals)
+        return list(self.rules.keys())
         
-    @property
-    def terminals(self):
+    def terms(self):
         # everything on rhs not in nonterminals is terminal
-        t = set(
-                symbol
-                for _, rhs in self.rules
-                for symbol in rhs
-                if not self.is_nonterminal(symbol)
-                )
-        # add in eof because not included in grammar
-        t.add('f')
-        return t
+        terminals = ['eof']  # add in eof because not included in grammar
+        for i in self.rules.values():
+            for vals in i:
+                for val in vals:
+                    if val not in self.nonterminals and val not in terminals:
+                        terminals.append(val)
+        return terminals
