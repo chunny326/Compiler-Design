@@ -27,5 +27,5 @@ This will delete the old results output file assignment2_parse_results.txt.
 It will then run the LL1 tokenization and parsing of the input files. 
 The results will be copied to both the terminal and the output file assignment2_parse_results.txt.
 
-The results of parsing ll1_valid_book.txt and ll1_invalid_book.txt will be output using the grammar specified in the textbook.
-The results of parsing ll1_valid_class.txt and ll1_invalid_book.txt will then be output using the grammar with my added productions. 
+The results of parsing ```ll1_valid_book.txt``` and ```ll1_invalid_book.txt``` will be output using the grammar specified in the textbook.
+The results of parsing ```ll1_valid_class.txt``` and ll1_invalid_book.txt``` will then be output using the grammar with my added productions. 
