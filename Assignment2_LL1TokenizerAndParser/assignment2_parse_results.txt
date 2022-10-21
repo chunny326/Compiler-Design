@@ -1,0 +1,212 @@
+
+FIRST:  {'Goal': ['(', 'num', 'name'], 'Expr': ['(', 'num', 'name'], "Expr'": ['+', '-', 'eps'], 'Term': ['(', 'num', 'name'], "Term'": ['*', '/', 'eps'], 'Factor': ['(', 'num', 'name'], 'eof': ['eof'], '+': ['+'], '-': ['-'], 'eps': ['eps'], '*': ['*'], '/': ['/'], '(': ['('], ')': [')'], 'num': ['num'], 'name': ['name']}
+
+FOLLOW:  {'Goal': ['eof'], 'Expr': ['eof', ')'], "Expr'": ['eof', ')'], 'Term': ['eof', '+', '-', ')'], "Term'": ['eof', '+', '-', ')'], 'Factor': ['eof', '+', '-', '*', '/', ')']}
+
+FIRST+:  [['(', 'num', 'name'], ['(', 'num', 'name'], ['+'], ['-'], ['eps', 'eof', ')'], ['(', 'num', 'name'], ['*'], ['/'], ['eps', 'eof', '+', '-', ')'], ['('], ['num'], ['name']] 
+
+LL1 Table: 
+
+        eof    +    -    *    /    (    )  num name
+
+Factor   -1   -1   -1   -1   -1    9   -1   10   11
+
+Goal     -1   -1   -1   -1   -1    0   -1    0    0
+
+Expr     -1   -1   -1   -1   -1    1   -1    1    1
+
+Expr'     4    2    3   -1   -1   -1    4   -1   -1
+
+Term     -1   -1   -1   -1   -1    5   -1    5    5
+
+Term'     8    8    8    6    7   -1    8   -1   -1
+
+
+
+Scanning  Notes/ll1_valid_book.txt ...
+
+
+Parsing  Notes/ll1_valid_book.txt ...
+
+Line 1 is valid
+
+Line 2 is valid
+
+Line 3 is valid
+
+Line 4 is valid
+
+Line 5 is valid
+
+Line 6 is valid
+
+Line 7 is valid
+
+Line 8 is valid
+
+Line 9 is valid
+
+Line 10 is valid
+
+Line 11 is valid
+
+Line 12 is valid
+
+Line 13 is valid
+
+Line 14 is valid
+
+Line 15 is valid
+
+Line 16 is valid
+
+Line 17 is valid
+
+Line 18 is valid
+
+Line 19 is valid
+
+Line 20 is valid
+
+Line 21 is valid
+
+Line 22 is valid
+
+Line 23 is valid
+
+Line 24 is valid
+
+Line 25 is valid
+
+Line 26 is valid
+
+Line 27 is valid
+
+Line 28 is valid
+
+Line 29 is valid
+
+Line 30 is valid
+
+Line 31 is valid
+
+Line 32 is valid
+
+Line 33 is valid
+
+Line 34 is valid
+
+Line 35 is valid
+
+Line 36 is valid
+
+Line 37 is valid
+
+Line 38 is valid
+
+Line 39 is valid
+
+Line 40 is valid
+
+Line 41 is valid
+
+
+
+Scanning  Notes/ll1_invalid_book.txt ...
+
+
+Parsing  Notes/ll1_invalid_book.txt ...
+
+Invalid expanding focus - Line  1  is invalid
+
+Invalid expanding focus - Line  2  is invalid
+
+Line 3 is invalid
+
+Line 4 is invalid
+
+Invalid expanding focus - Line  5  is invalid
+
+Invalid expanding focus - Line  6  is invalid
+
+Invalid expanding focus - Line  7  is invalid
+
+Invalid expanding focus - Line  8  is invalid
+
+Invalid expanding focus - Line  9  is invalid
+
+Invalid expanding focus - Line  10  is invalid
+
+Invalid expanding focus - Line  11  is invalid
+
+Invalid expanding focus - Line  12  is invalid
+
+Invalid expanding focus - Line  13  is invalid
+
+Line 14 is invalid
+
+Invalid expanding focus - Line  15  is invalid
+
+Invalid expanding focus - Line  16  is invalid
+
+Invalid expanding focus - Line  17  is invalid
+
+Invalid expanding focus - Line  18  is invalid
+
+Invalid expanding focus - Line  19  is invalid
+
+Invalid expanding focus - Line  20  is invalid
+
+Invalid expanding focus - Line  21  is invalid
+
+Invalid expanding focus - Line  22  is invalid
+
+Line 23 is invalid
+
+Invalid expanding focus - Line  24  is invalid
+
+Invalid expanding focus - Line  25  is invalid
+
+Invalid expanding focus - Line  26  is invalid
+
+Illegal character found:  "
+Line  26  is invalid
+
+Invalid expanding focus - Line  27  is invalid
+
+Invalid expanding focus - Line  28  is invalid
+
+Invalid expanding focus - Line  29  is invalid
+
+Invalid expanding focus - Line  30  is invalid
+
+Invalid expanding focus - Line  31  is invalid
+
+Invalid expanding focus - Line  32  is invalid
+
+Invalid expanding focus - Line  33  is invalid
+
+Invalid expanding focus - Line  34  is invalid
+
+Invalid expanding focus - Line  35  is invalid
+
+Illegal character found:  _
+Line  37  is invalid
+
+Illegal character found:  _
+Line  38  is invalid
+
+Invalid expanding focus - Line  36  is invalid
+
+Invalid expanding focus - Line  37  is invalid
+
+Invalid expanding focus - Line  38  is invalid
+
+Invalid expanding focus - Line  39  is invalid
+
+Invalid expanding focus - Line  40  is invalid
+
+Invalid expanding focus - Line  41  is invalid
+
+Line 42 is valid
+
