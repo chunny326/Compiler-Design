@@ -1,6 +1,7 @@
 class Parser: 
-    def __init__(self, tokens):
+    def __init__(self, tokens, book_set = True):
         self.tokens = iter(tokens)
+        self.book_set = book_set
 
         # grammar rule corresponding to table
         # needed because container is dictionary of lists of lists
@@ -8,6 +9,14 @@ class Parser:
                            0: 0, 1: 0, 2: 0, 3: 1,
                            4: 2, 5: 0, 6: 0, 7: 1,
                            8: 2, 9: 0, 10: 1, 11: 2
+                         }
+
+        self.rules_lut_class = { 
+                           0: 0, 1: 0, 2: 0, 3: 1,
+                           4: 2, 5: 0, 6: 0, 7: 1,
+                           8: 2, 9: 0, 10: 0, 11: 1,
+                           12: 0, 13: 1, 14: 2, 15: 3,
+                           16: 0, 17: 1
                          }
         
     def advance(self):
@@ -65,9 +74,15 @@ class Parser:
                     if (focus, word.type.value) in table.keys() and \
                           table[(focus, word.type.value)] != -1:
                         stack.pop()
-                        for i in grammar.rules[focus][self.rules_lut_book[table[(focus, word.type.value)]]][::-1]:
-                            if i != 'eps':
-                                stack.append(i)
+
+                        if self.book_set == True:
+                            for i in grammar.rules[focus][self.rules_lut_book[table[(focus, word.type.value)]]][::-1]:
+                                if i != 'eps':
+                                    stack.append(i)
+                        else:
+                            for i in grammar.rules[focus][self.rules_lut_class[table[(focus, word.type.value)]]][::-1]:
+                                if i != 'eps':
+                                    stack.append(i)
                     else:
                         count = count + 1
                         print("Invalid expanding focus - Line ", count, " is invalid\n")

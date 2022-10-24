@@ -9,8 +9,8 @@ Term'  -> * Factor Term'
 Term'  -> / Factor Term'
 Term'  -> eps
 Factor -> ( Expr )
-Factor -> num
 Factor -> name
+Factor -> num
 
 # Modified productions
 Goal   -> Expr
@@ -23,11 +23,11 @@ Term'  -> * Ex Term'
 Term'  -> / Ex Term'
 Term'  -> eps
 Ex     -> Factor Ex'
-Ex'    -> ^ Ex' Factor
+Ex'    -> ^ Factor Ex'
 Ex'    -> eps
 Factor -> ( Expr )
 Factor -> - Neg
-Factor -> num
 Factor -> name
-Neg    -> num
+Factor -> num
 Neg    -> name
+Neg    -> num

@@ -87,18 +87,12 @@ def find_first_plus(first, follow, grammar):
                 first_plus.append(temp[expression[0]])
     return first_plus
 
-def get_index_of_containing_tuple(lst: tuple, item):
-    try:
-        return next(ind for ind, tup in enumerate(lst) if item in tup)
-    except Exception:
-        return -1
-
 def construct_table(first_plus, grammar):
     table = {}
     terminals = deepcopy(grammar.terminals)
     terminals.remove('eps')
-    order_nonterminals = [5, 0, 1, 2, 3, 4]
-    nonterminals = [grammar.nonterminals[i] for i in order_nonterminals]
+    nonterminals = deepcopy(grammar.nonterminals)
+
     for nt in nonterminals:
         for t in terminals:
             table[(nt, t)] = -1
@@ -108,7 +102,10 @@ def construct_table(first_plus, grammar):
         for expression in grammar.rules[nt]:
             for w in first_plus[i]:
                 if w in terminals:
-                    table[(nt, w)] = i
+                    if table[(nt, w)] != -1:
+                        print("ERROR! Updating LL1 table that already has value at (", nt, ", ", w, ").\n")
+                    else:
+                        table[(nt, w)] = i
 
             if 'eof' in first_plus[i]:
                 table[(nt, 'eof')] = i

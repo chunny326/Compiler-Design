@@ -43,6 +43,9 @@ class Lexer:
             elif self.cur_char == '^':
                 self.advance()
                 yield Token(TokenType.POW)
+            elif self.cur_char == '_':
+                self.advance()
+                yield Token(TokenType.UNDERSCORE)
             elif self.cur_char == '=':
                 self.advance()
                 yield Token(TokenType.EQ)
@@ -52,6 +55,18 @@ class Lexer:
             elif self.cur_char == ')':
                 self.advance()
                 yield Token(TokenType.RPAREN)
+            elif self.cur_char == '"':
+                self.advance()
+                yield Token(TokenType.QUOTES)
+            elif self.cur_char == ',':
+                self.advance()
+                yield Token(TokenType.COMMA)
+            elif self.cur_char == '!':
+                self.advance()
+                yield Token(TokenType.EXCLAME)
+            elif self.cur_char == '\\':
+                self.advance()
+                yield Token(TokenType.BACKSLASH)
             elif self.cur_char == '.':
                 self.advance()
                 yield Token(TokenType.DECIMAL)

@@ -9,18 +9,23 @@ class TokenType(Enum):
     MUL        = '*'
     DIV        = '/'
     POW        = '^'
+    UNDERSCORE = '_'
     EQ         = '='
     LPAREN     = '('
     RPAREN     = ')'
     SEMICOLON  = ';'
+    QUOTES     = '"'
     EOF        = 'f'
     NEWLINE    = 'eof'
     EMPTY      = ' '
     DECIMAL    = '.'
+    COMMA      = ','
+    EXCLAME    = '!'
+    BACKSLASH  = '\\'
 
     # keywords
-    NUM        = 15
-    WRITE      = 16
+    NUM        = 20
+    WRITE      = 21
 
 @dataclass
 class Token:
@@ -32,7 +37,7 @@ class Token:
 
     def checkIfKeyword(tokenText):
         for kind in TokenType:
-            # 14 and 15 below will change as more keywords are added
-            if kind.name.lower() == tokenText and (kind.value == 15 or kind.value == 16):
+            # 20 and 21 below will change as more keywords are added
+            if kind.name.lower() == tokenText and (kind.value == 20 or kind.value == 21):
                 return kind
         return None
