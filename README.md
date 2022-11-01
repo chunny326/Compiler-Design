@@ -4,7 +4,7 @@
 
 Instructions for running:
   
-Enter the following into the terminal:
+Enter the following into the terminal from within the Assignment 1 directory:
 ```
 python3 main.py
 nasm -felf64 nasm_progtxt.asm; gcc -no-pie nasm_progtxt.o -o nasm_progtxt; ./nasm_progtxt
@@ -18,7 +18,7 @@ The file nasm_progtxt.asm will be generated and the output of running this file 
 
 Instructions for running:
   
-Enter the following into the terminal:
+Enter the following into the terminal from within the Assignment 2 directory:
 ```
 rm assignment2_parse_results.txt; python3 main.py | tee assignment2_parse_results.txt
 ```
@@ -36,7 +36,7 @@ The results of parsing ```ll1_valid_class.txt``` and ```ll1_invalid_book.txt``` 
 
 Instructions for running:
   
-Enter the following into the terminal:
+Enter the following into the terminal from within the Assignment 3 directory:
 ```
 rm assignment3_parse_results.txt; python3 main.py | tee assignment3_parse_results.txt
 ```
