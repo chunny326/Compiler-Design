@@ -1,0 +1,206 @@
+
+
+Processing grammar for valid/invalid sets...
+
+
+FIRST:  {'Goal': ['(', '-', 'num', 'name'], 'Expr': ['(', '-', 'num', 'name'], "Expr'": ['+', '-', 'eps'], 'Term': ['(', '-', 'num', 'name'], "Term'": ['*', '/', 'eps'], 'Ex': ['(', '-', 'num', 'name'], "Ex'": ['^', 'eps'], 'Factor': ['(', '-', 'num', 'name'], 'Neg': ['num', 'name'], 'eof': ['eof'], '+': ['+'], '-': ['-'], 'eps': ['eps'], '*': ['*'], '/': ['/'], '^': ['^'], '(': ['('], ')': [')'], 'num': ['num'], 'name': ['name']}
+
+FOLLOW:  {'Goal': ['eof'], 'Expr': ['eof', ')'], "Expr'": ['eof', ')'], 'Term': ['eof', '+', '-', ')'], "Term'": ['eof', '+', '-', ')'], 'Ex': ['eof', '+', '-', '*', '/', ')'], "Ex'": ['eof', '+', '-', '*', '/', ')'], 'Factor': ['eof', '+', '-', '*', '/', '^', ')'], 'Neg': ['eof', '+', '-', '*', '/', '^', ')']}
+
+FIRST+:  [['(', '-', 'num', 'name'], ['(', '-', 'num', 'name'], ['+'], ['-'], ['eps', 'eof', ')'], ['(', '-', 'num', 'name'], ['*'], ['/'], ['eps', 'eof', '+', '-', ')'], ['(', '-', 'num', 'name'], ['^'], ['eps', 'eof', '+', '-', '*', '/', ')'], ['('], ['-'], ['num'], ['name'], ['num'], ['name']] 
+
+LL1 Table: 
+
+        eof    +    -    *    /    ^    (    )  num name
+
+Goal     -1   -1    0   -1   -1   -1    0   -1    0    0
+
+Expr     -1   -1    1   -1   -1   -1    1   -1    1    1
+
+Expr'     4    2    3   -1   -1   -1   -1    4   -1   -1
+
+Term     -1   -1    5   -1   -1   -1    5   -1    5    5
+
+Term'     8    8    8    6    7   -1   -1    8   -1   -1
+
+Ex       -1   -1    9   -1   -1   -1    9   -1    9    9
+
+Ex'      11   11   11   11   11   10   -1   11   -1   -1
+
+Factor    -1   -1   13   -1   -1   -1   12   -1   14   15
+
+Neg      -1   -1   -1   -1   -1   -1   -1   -1   16   17
+
+
+
+Scanning  Notes/ll1_to_ir.txt ...
+
+
+Parsing  Notes/ll1_to_ir.txt ...
+
+Line 1 is valid
+
+Line 2 is valid
+
+Line 3 is valid
+
+Line 4 is valid
+
+Line 5 is valid
+
+Line 6 is valid
+
+Line 7 is valid
+
+Line 8 is valid
+
+Line 9 is valid
+
+Line 10 is valid
+
+Line 11 is valid
+
+Line 12 is valid
+
+Line 13 is valid
+
+Line 14 is valid
+
+Line 15 is valid
+
+Line 16 is valid
+
+Line 17 is valid
+
+Line 18 is valid
+
+Line 19 is valid
+
+Line 20 is valid
+
+Line 21 is valid
+
+Line 22 is valid
+
+Line 23 is valid
+
+Line 24 is valid
+
+Line 25 is valid
+
+Line 26 is valid
+
+Line 27 is valid
+
+Line 28 is valid
+
+Line 29 is valid
+
+Line 30 is valid
+
+Line 31 is valid
+
+Line 32 is valid
+
+Line 33 is valid
+
+Line 34 is valid
+
+Line 35 is valid
+
+Line 36 is valid
+
+Line 37 is valid
+
+Line 38 is valid
+
+Line 39 is valid
+
+Line 40 is valid
+
+Line 41 is valid
+
+Line 42 is valid
+
+Line 43 is valid
+
+Line 44 is valid
+
+Line 45 is valid
+
+Line 46 is valid
+
+Line 47 is valid
+
+Line 48 is valid
+
+Line 49 is valid
+
+Line 50 is valid
+
+Line 51 is valid
+
+Line 52 is valid
+
+Line 53 is valid
+
+Line 54 is valid
+
+Line 55 is valid
+
+Line 56 is valid
+
+Line 57 is valid
+
+Line 58 is valid
+
+Line 59 is valid
+
+Line 60 is valid
+
+Line 61 is valid
+
+Line 62 is valid
+
+Line 63 is valid
+
+Line 64 is valid
+
+Line 65 is valid
+
+Line 66 is valid
+
+Line 67 is valid
+
+Line 68 is valid
+
+Line 69 is valid
+
+Line 70 is valid
+
+Line 71 is valid
+
+Line 72 is valid
+
+Line 73 is valid
+
+Line 74 is valid
+
+Line 75 is valid
+
+Line 76 is valid
+
+Line 77 is valid
+
+Line 78 is valid
+
+Line 79 is valid
+
+Line 80 is valid
+
+Line 81 is valid
+
+Line 82 is valid
+
+Line 83 is valid
+
