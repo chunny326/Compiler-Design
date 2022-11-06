@@ -1,206 +1,176 @@
 
-
 Processing grammar for valid/invalid sets...
 
+Scanning Notes/ll1_to_ir.txt...
 
-FIRST:  {'Goal': ['(', '-', 'num', 'name'], 'Expr': ['(', '-', 'num', 'name'], "Expr'": ['+', '-', 'eps'], 'Term': ['(', '-', 'num', 'name'], "Term'": ['*', '/', 'eps'], 'Ex': ['(', '-', 'num', 'name'], "Ex'": ['^', 'eps'], 'Factor': ['(', '-', 'num', 'name'], 'Neg': ['num', 'name'], 'eof': ['eof'], '+': ['+'], '-': ['-'], 'eps': ['eps'], '*': ['*'], '/': ['/'], '^': ['^'], '(': ['('], ')': [')'], 'num': ['num'], 'name': ['name']}
+Parsing Notes/ll1_to_ir.txt...
 
-FOLLOW:  {'Goal': ['eof'], 'Expr': ['eof', ')'], "Expr'": ['eof', ')'], 'Term': ['eof', '+', '-', ')'], "Term'": ['eof', '+', '-', ')'], 'Ex': ['eof', '+', '-', '*', '/', ')'], "Ex'": ['eof', '+', '-', '*', '/', ')'], 'Factor': ['eof', '+', '-', '*', '/', '^', ')'], 'Neg': ['eof', '+', '-', '*', '/', '^', ')']}
 
-FIRST+:  [['(', '-', 'num', 'name'], ['(', '-', 'num', 'name'], ['+'], ['-'], ['eps', 'eof', ')'], ['(', '-', 'num', 'name'], ['*'], ['/'], ['eps', 'eof', '+', '-', ')'], ['(', '-', 'num', 'name'], ['^'], ['eps', 'eof', '+', '-', '*', '/', ')'], ['('], ['-'], ['num'], ['name'], ['num'], ['name']] 
+Printing results:
 
-LL1 Table: 
+Valid: a  .....
 
-        eof    +    -    *    /    ^    (    )  num name
+Valid: a  +  b  .....
 
-Goal     -1   -1    0   -1   -1   -1    0   -1    0    0
+Valid: b  *  c  .....
 
-Expr     -1   -1    1   -1   -1   -1    1   -1    1    1
+Valid: c  -  d  .....
 
-Expr'     4    2    3   -1   -1   -1   -1    4   -1   -1
+Valid: e  /  f  .....
 
-Term     -1   -1    5   -1   -1   -1    5   -1    5    5
+Valid: a  +  b  *  c  .....
 
-Term'     8    8    8    6    7   -1   -1    8   -1   -1
+Valid: z  -  y  .....
 
-Ex       -1   -1    9   -1   -1   -1    9   -1    9    9
+Valid: 3  *  4  .....
 
-Ex'      11   11   11   11   11   10   -1   11   -1   -1
+Valid: 12  /  6  .....
 
-Factor    -1   -1   13   -1   -1   -1   12   -1   14   15
+Valid: 12  /  6  .....
 
-Neg      -1   -1   -1   -1   -1   -1   -1   -1   16   17
+Valid: 5  +  4  *  3  .....
 
+Valid: 12  +  34  *  45  .....
 
+Valid: (  4  /  5  )  .....
 
-Scanning  Notes/ll1_to_ir.txt ...
+Valid: 2  *  2  +  5  *  5  .....
 
+Valid: 42  .....
 
-Parsing  Notes/ll1_to_ir.txt ...
+Valid: (  42  )  .....
 
-Line 1 is valid
+Valid: (  (  42  )  )  .....
 
-Line 2 is valid
+Valid: (  (  42  )  )  .....
 
-Line 3 is valid
+Valid: var  .....
 
-Line 4 is valid
+Valid: var  +  another_var  .....
 
-Line 5 is valid
+Valid: var1  +  var2  .....
 
-Line 6 is valid
+Valid: foo  *  bar  .....
 
-Line 7 is valid
+Valid: a  +  b  *  c  .....
 
-Line 8 is valid
+Valid: x  -  y  .....
 
-Line 9 is valid
+Valid: 1234  *  5678  .....
 
-Line 10 is valid
+Valid: 100000  /  a_long_variable_name  .....
 
-Line 11 is valid
+Valid: (  (  12  -  8  )  -  3  )  .....
 
-Line 12 is valid
+Valid: (  5  *  (  8  /  4  )  )  .....
 
-Line 13 is valid
+Valid: (  1  +  2  )  *  3  .....
 
-Line 14 is valid
+Valid: (  (  a  /  b  )  +  (  c  *  d  )  )  .....
 
-Line 15 is valid
+Valid: a_  .....
 
-Line 16 is valid
+Valid: (  a_  )  .....
 
-Line 17 is valid
+Valid: (  v_____2  +  v__3__  )  .....
 
-Line 18 is valid
+Valid: (  (  (  (  300  +  var1  )  )  )  )  .....
 
-Line 19 is valid
+Valid: (  myObject1  -  MyObject2  )  +  18  .....
 
-Line 20 is valid
+Valid: (  (  (  (  (  9  +  (  2  *  (  110  -  (  30  /  2  )  )  )  )  *  8  )  +  1000  )  /  2  )  +  (  (  (  3  *  3  *  3  *  3  )  +  1  )  /  2  )  )  .....
 
-Line 21 is valid
+Valid: 2  +  3  .....
 
-Line 22 is valid
+Valid: (  a  +  b  )  .....
 
-Line 23 is valid
+Valid: -  42  .....
 
-Line 24 is valid
+Valid: (  -  42  )  .....
 
-Line 25 is valid
+Valid: (  -  42  )  .....
 
-Line 26 is valid
+Valid: -  var  .....
 
-Line 27 is valid
+Valid: -  1  *  var  /  -  1  .....
 
-Line 28 is valid
+Valid: 2  -  3  .....
 
-Line 29 is valid
+Valid: 2  -  3  .....
 
-Line 30 is valid
+Valid: 2  -  -  3  .....
 
-Line 31 is valid
+Valid: 2  -  -  3  .....
 
-Line 32 is valid
+Valid: -  2  -  3  .....
 
-Line 33 is valid
+Valid: -  2  -  -  3  .....
 
-Line 34 is valid
+Valid: -  2  -  -  3  .....
 
-Line 35 is valid
+Valid: (  -  2  -  -  3  )  .....
 
-Line 36 is valid
+Valid: (  -  2  -  -  3  )  .....
 
-Line 37 is valid
+Valid: -  2  -  (  -  3  )  .....
 
-Line 38 is valid
+Valid: -  2  -  (  -  3  )  .....
 
-Line 39 is valid
+Valid: -  2  -  (  -  3  )  .....
 
-Line 40 is valid
+Valid: -  2  -  (  -  3  -  (  4  )  )  .....
 
-Line 41 is valid
+Valid: -  2  -  (  -  3  -  (  4  )  )  .....
 
-Line 42 is valid
+Valid: -  2  -  (  -  3  -  (  -  4  )  )  .....
 
-Line 43 is valid
+Valid: -  2  -  (  -  2  -  (  -  2  -  2  )  )  .....
 
-Line 44 is valid
+Valid: -  2  -  (  -  2  -  (  -  2  -  2  )  )  .....
 
-Line 45 is valid
+Valid: -  11  -  (  -  22  -  (  -  33  -  (  -  44  -  (  -  55  -  (  -  66  )  )  )  )  )  .....
 
-Line 46 is valid
+Valid: g  ^  h  .....
 
-Line 47 is valid
+Valid: g  ^  h  .....
 
-Line 48 is valid
+Valid: 3  ^  3  .....
 
-Line 49 is valid
+Valid: 4  ^  4  .....
 
-Line 50 is valid
+Valid: 3  ^  3  ^  3  .....
 
-Line 51 is valid
+Valid: 3  ^  (  3  ^  3  )  .....
 
-Line 52 is valid
+Valid: 5  +  4  *  3  ^  2  .....
 
-Line 53 is valid
+Valid: 2  -  -  3  .....
 
-Line 54 is valid
+Valid: 2  +  -  3  .....
 
-Line 55 is valid
+Valid: 184  +  -  84  .....
 
-Line 56 is valid
+Valid: 2  -  -  a  .....
 
-Line 57 is valid
+Valid: 2  +  -  a  .....
 
-Line 58 is valid
+Valid: 2  +  -  4  .....
 
-Line 59 is valid
+Valid: 2  +  -  4  .....
 
-Line 60 is valid
+Valid: 2  +  -  4  .....
 
-Line 61 is valid
+Valid: 4  *  3  /  2  +  1  .....
 
-Line 62 is valid
+Valid: four  *  three  /  two  +  one  .....
 
-Line 63 is valid
+Valid: 4  *  3  /  2  +  one  .....
 
-Line 64 is valid
+Valid: (  (  (  2  +  3  )  *  4  )  +  (  7  +  (  8  /  2  )  )  )  .....
 
-Line 65 is valid
+Valid: (  (  (  2  +  3  )  *  4  )  +  (  7  +  (  var1  /  2  )  )  )  .....
 
-Line 66 is valid
+Valid: 5  /  0  .....
 
-Line 67 is valid
-
-Line 68 is valid
-
-Line 69 is valid
-
-Line 70 is valid
-
-Line 71 is valid
-
-Line 72 is valid
-
-Line 73 is valid
-
-Line 74 is valid
-
-Line 75 is valid
-
-Line 76 is valid
-
-Line 77 is valid
-
-Line 78 is valid
-
-Line 79 is valid
-
-Line 80 is valid
-
-Line 81 is valid
-
-Line 82 is valid
-
-Line 83 is valid
+Valid: End of file. Done processing.
 

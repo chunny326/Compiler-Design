@@ -2,6 +2,7 @@ class Parser:
     def __init__(self, tokens, book_set = True):
         self.tokens = iter(tokens)
         self.book_set = book_set
+        self.parse_results = []
 
         # grammar rule corresponding to table
         # needed because container is dictionary of lists of lists
@@ -42,7 +43,8 @@ class Parser:
                 # line is parsed correctly or reached end of file
                 if focus == 'eof' and (word.type.value == 'eof' or word.type.value == 'f'):
                     count = count + 1
-                    print("Line", count, "is valid\n")
+                    self.parse_results.append("Valid")
+                    # print("Line", count, "is valid\n")
                     self.advance()
                     word = self.cur_token
                     break
@@ -54,7 +56,8 @@ class Parser:
                         word = self.cur_token
                     else:
                         count = count + 1
-                        print("Line", count, "is invalid\n")
+                        self.parse_results.append("Invalid")
+                        # print("Line", count, "is invalid\n")
 
                         # give up on this line, parse the next line
                         while (self.cur_token.type.value != 'eof'):
@@ -85,7 +88,8 @@ class Parser:
                                     stack.append(i)
                     else:
                         count = count + 1
-                        print("Invalid expanding focus - Line ", count, " is invalid\n")
+                        self.parse_results.append("Invalid")
+                        # print("Invalid expanding focus - Line ", count, " is invalid\n")
                         
                         # give up on this line, parse the next line
                         while (self.cur_token.type.value != 'eof'):
@@ -95,4 +99,6 @@ class Parser:
                         break
                     
                 focus = stack[-1]
+
+        return self.parse_results
 
