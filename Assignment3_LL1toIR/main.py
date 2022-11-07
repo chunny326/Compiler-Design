@@ -3,6 +3,12 @@ from grammar import Grammar
 from table_construction import *
 from skeleton_parser import Parser
 from tokens import TokenType
+from ir import shunting_yard
+
+def print_next_post_order(post_ord_line):
+    for val in post_ord_line:
+        print(val, " ", sep = "", end = "")
+    print(" .....\n")
 
 if __name__ == "__main__":
     # ------------------- grammar for accepted expressions -------------------
@@ -47,15 +53,17 @@ if __name__ == "__main__":
     tokens = lexer.gen_tokens()
 
     parse = Parser(tokens, False)
-    print("\nParsing ", file.name, "...\n\n", sep = "")
+    print("\nParsing ", file.name, "...", sep = "")
     parse_results = parse.skeleton_parser(table, productions)
 
-    # get another copy of the set of tokens from file to pass to Shunting yard algorithm
+    # get another copy of the set of tokens from file to pass to Shunting Yard algorithm
     lexer2 = Lexer(text)
     tokens2 = lexer2.gen_tokens()
     toks = list(tokens2)
 
-    # run the Shunting yard algorithm
+    # run the Shunting Yard algorithm to get queue with post-order traversal
+    print("\nRunning Shunting Yard algorithm to create post-order traversal...\n", sep = "")
+    post_order = shunting_yard(toks)
 
     # run optimizations
 
@@ -75,8 +83,8 @@ if __name__ == "__main__":
             else:
                 print(tok.type.value, " ", end = "")
         else:
-            print(".....\n")
+            print(".....  ", end = "")
+            print_next_post_order(post_order[index - 1])
             print(parse_results[index], ": ", end = "", sep = "")
             index = index + 1
-
     # ----------------------------------------------------------------------------------

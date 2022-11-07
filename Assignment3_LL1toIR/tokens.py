@@ -6,6 +6,7 @@ class TokenType(Enum):
     NUMBER     = 'num'
     PLUS       = '+'
     MINUS      = '-'
+    UMINUS     = '-u'
     MUL        = '*'
     DIV        = '/'
     POW        = '^'
