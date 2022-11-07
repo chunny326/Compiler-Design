@@ -43,4 +43,6 @@ rm assignment3_parse_results.txt; python3 main.py | tee assignment3_parse_result
   
 This will delete the old results output file assignment3_parse_results.txt. 
 It will then run the LL1 tokenization and parsing of the input file ll1_to_ir.txt. 
+It then runs the Shunting Yard algorithm to create post-order notation, then runs optimizations to simplify the post-order notation.
+  
 The results will be copied to both the terminal and the output file assignment3_parse_results.txt.
