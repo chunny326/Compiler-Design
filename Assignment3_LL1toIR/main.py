@@ -3,12 +3,17 @@ from grammar import Grammar
 from table_construction import *
 from skeleton_parser import Parser
 from tokens import TokenType
-from ir import shunting_yard
+from ir import shunting_yard, optimize_post_order
 
 def print_next_post_order(post_ord_line):
     for val in post_ord_line:
         print(val, " ", sep = "", end = "")
-    print(" .....\n")
+    print(" ..... ", sep = "", end = "")
+
+def print_optimizations(optimized_line):
+    for val in optimized_line:
+        print(val, " ", sep = "", end = "")
+    print("\n")
 
 if __name__ == "__main__":
     # ------------------- grammar for accepted expressions -------------------
@@ -66,14 +71,19 @@ if __name__ == "__main__":
     post_order = shunting_yard(toks)
 
     # run optimizations
-
+    optimized_post_order = optimize_post_order(post_order)
     # -------------------------------------------------------------------------------------
 
     # ----------------------------------- print results -----------------------------------
     print("Printing results:\n")
     index = 0
+    
     print(parse_results[index], ": ", end = "", sep = "")
+    valid = True
+    if parse_results[index] == 'Invalid':
+        valid = False
     index = index + 1
+
     for tok in toks:
         if tok.type.value != TokenType.NEWLINE.value:
             if tok.type.value == 'name' or tok.type.value == 'num':
@@ -83,8 +93,20 @@ if __name__ == "__main__":
             else:
                 print(tok.type.value, " ", end = "")
         else:
+            # for all invalid lines of code, only display "Invalid"
+            if valid == False:
+                continue
+
+            # print post-order and optimized post-order
             print(".....  ", end = "")
             print_next_post_order(post_order[index - 1])
+            print_optimizations(optimized_post_order[index - 1])
+
+            # print next line result
             print(parse_results[index], ": ", end = "", sep = "")
+            if parse_results[index] == 'Invalid':
+                valid = False
+            else:
+                valid = True
             index = index + 1
     # ----------------------------------------------------------------------------------

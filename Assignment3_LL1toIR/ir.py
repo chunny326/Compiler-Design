@@ -1,4 +1,5 @@
 from tokens import TokenType, Token
+from copy import deepcopy
 
 # assign all operators precedence
 operator_prec = {
@@ -16,18 +17,71 @@ def higher_precedence(op1, op2):
 def peek_ops(stack):
     return stack[-1] if stack else None
 
-# calculate if operator has two numerical operands
-def optimize_expr(ops, vals):
-    op = ops.pop()
-    r = vals.pop()
+def optimize_post_order(post_order):
+    copy_post_order = deepcopy(post_order)
+    optimized_post_order = []
 
-    # check for divide-by-zero error
-    if op == '/' and r == 0:
-        vals.append('error')
-        return
+    for line in copy_post_order:
+        optimized_post_order.append(optimize_ops(line))
 
-    l = vals.pop()
-    vals.append(eval("{0}{1}{2}".format(l, op, r)))
+    return optimized_post_order
+
+# check if operator has two numerical operands and simplify
+# check if unary operator follows number and simplify
+# check for divide by zero error
+def optimize_ops(post_order_line):
+    operators = ['+', '-', '*', '/', '^']
+    uminus = ['-u']
+
+    idx = len(post_order_line) - 2
+    while idx >= 0:
+        changed = False # don't decrement unless unchanged
+
+        # constant followed by unary operator
+        if (type(post_order_line[idx]) == int or type(post_order_line[idx]) == float) \
+           and (idx + 1) < len(post_order_line) \
+           and post_order_line[idx + 1] in uminus:
+
+            temp = -post_order_line[idx]
+            del post_order_line[idx + 1]
+            post_order_line[idx] = temp
+            changed = True
+
+        # operator has two numerical operands
+        elif (type(post_order_line[idx]) == int or type(post_order_line[idx]) == float) \
+              and (idx + 1) < len(post_order_line) \
+              and (type(post_order_line[idx + 1]) == int or type(post_order_line[idx + 1]) == float) \
+              and (idx + 2) < len(post_order_line) \
+              and post_order_line[idx + 2] in operators:
+
+            operator = post_order_line[idx + 2]
+
+            # compute appropriate operation
+            if operator == '+':
+                temp = post_order_line[idx] + post_order_line[idx + 1]
+            elif operator == '-':
+                temp = post_order_line[idx] - post_order_line[idx + 1]
+            elif operator == '*':
+                temp = post_order_line[idx] * post_order_line[idx + 1]
+            elif operator == '/':
+                # check for divide-by-zero
+                if post_order_line[idx + 1] == 0:
+                    post_order_line = ['[error]']
+                    return post_order_line
+                temp = int(post_order_line[idx] / post_order_line[idx + 1])
+            elif operator == '^':
+                temp = post_order_line[idx] ** post_order_line[idx + 1]
+            
+            # remove operator and numbers from the notation, replace with computation
+            del post_order_line[idx + 2]
+            del post_order_line[idx + 1]
+            post_order_line[idx] = temp
+            changed = True
+
+        if not changed: # don't decrement unless unchanged
+            idx = idx - 1
+
+    return post_order_line
 
 def shunting_yard(tokens):
     op_stack = []    
