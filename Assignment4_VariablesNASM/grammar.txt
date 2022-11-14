@@ -1,0 +1,19 @@
+# Productions
+Goal   -> Expr
+Expr   -> Term Expr'
+Expr'  -> + Term Expr'
+Expr'  -> - Term Expr'
+Expr'  -> eps
+Term   -> Ex Term'
+Term'  -> * Ex Term'
+Term'  -> / Ex Term'
+Term'  -> eps
+Ex     -> Factor Ex'
+Ex'    -> ^ Factor Ex'
+Ex'    -> eps
+Factor -> ( Expr )
+Factor -> - Neg
+Factor -> name
+Factor -> num
+Neg    -> name
+Neg    -> num
