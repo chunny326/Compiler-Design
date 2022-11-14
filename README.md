@@ -46,3 +46,17 @@ It will then run the LL1 tokenization and parsing of the input file ll1_to_ir.tx
 It then runs the Shunting Yard algorithm to create post-order notation, then runs optimizations to simplify the post-order notation.
   
 The results will be copied to both the terminal and the output file assignment3_parse_results.txt.
+
+-------------------------------------------------------------------------------------------------
+
+## Assignment 4 - Variables and NASM
+
+Instructions for running:
+  
+Enter the following into the terminal from within the Assignment 4 directory:
+```
+python3 main.py
+nasm -felf64 assignment4_results.asm; gcc -no-pie assignment4_results.o -o assignment4_results; ./assignment4_results
+```
+  
+The file assignment4_results.asm will be generated and the output of running this file will be printed to the console.
