@@ -3,8 +3,8 @@ from dataclasses import dataclass
 
 class TokenType(Enum):
     IDENTIFIER = 'name'
-    NUMBER     = 'num'
-    FLOAT      = 'flum'
+    NUMBER     = 'number'
+    FLOAT      = 'number'
     PLUS       = '+'
     MINUS      = '-'
     UMINUS     = '-u'
@@ -27,7 +27,7 @@ class TokenType(Enum):
 
     # keywords
     NUM        = 20
-    WRITE      = 21
+    PRINT      = 21
     FLUM       = 22
 
 @dataclass

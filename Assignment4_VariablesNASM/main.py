@@ -17,28 +17,33 @@ def print_optimizations(optimized_line):
 
 if __name__ == "__main__":
     # ------------------- grammar for accepted expressions -------------------
-    print("\nProcessing grammar for valid/invalid sets...")
+    print("\nProcessing grammar sets...")
 
     # productions to handle input language
-    productions = Grammar('Goal->Expr',
-                           'Expr->Term Expr\'',
-                           'Expr\'->+ Term Expr\'',
-                           'Expr\'->- Term Expr\'',
-                           'Expr\'->eps',
-                           'Term->Ex Term\'',
-                           'Term\'->* Ex Term\'',
-                           'Term\'->/ Ex Term\'',
-                           'Term\'->eps',
-                           'Ex->Factor Ex\'',
-                           'Ex\'->^ Factor Ex\'',
-                           'Ex\'->eps',
-                           'Factor->( Expr )',
-                           'Factor->- Neg',
-                           'Factor->num',
-                           'Factor->name',
-                           'Neg->num',
-                           'Neg->name'
-                          )
+    productions = Grammar('Goal->Statement',
+                          'Statement->Decl Assign',
+                          'Statement->name Assign',
+                          'Statement->print ( name )',
+                          'Decl->type name',
+                          'Assign->= Expr',
+                          'Assign->eps',
+                          'Expr->Term Expr\'',
+                          'Expr\'->+ Term Expr\'',
+                          'Expr\'->- Term Expr\'',
+                          'Expr\'->eps',
+                          'Term->Factor Term\'',
+                          'Term\'->* Factor Term\'',
+                          'Term\'->/ Factor Term\'',
+                          'Term\'->eps',
+                          'Factor->Base Power',
+                          'Power->^ Base Power',
+                          'Power->eps',
+                          'Base->( Expr )',
+                          'Base->Base\'',
+                          'Base->- Base\'',
+                          'Base\'->number',
+                          'Base\'->name',
+                         )
 
     # find the sets and table
     first = find_first(productions)
@@ -71,7 +76,7 @@ if __name__ == "__main__":
     post_order = shunting_yard(toks)
 
     # run optimizations
-    optimized_post_order = optimize_post_order(post_order)
+    # optimized_post_order = optimize_post_order(post_order)
     # -------------------------------------------------------------------------------------
 
     # ----------------------------------- print results -----------------------------------
@@ -86,7 +91,7 @@ if __name__ == "__main__":
 
     for tok in toks:
         if tok.type.value != TokenType.NEWLINE.value:
-            if tok.type.value == 'name' or tok.type.value == 'num':
+            if tok.type.value == 'name' or tok.type.value == 'number':
                 print(tok.value, " ", end = "")
             elif tok.type.name == 'EOF':
                 print("End of file. Done processing.\n")
@@ -100,7 +105,7 @@ if __name__ == "__main__":
             # print post-order and optimized post-order
             print(".....  ", end = "")
             print_next_post_order(post_order[index - 1])
-            print_optimizations(optimized_post_order[index - 1])
+            # print_optimizations(optimized_post_order[index - 1])
 
             # print next line result
             print(parse_results[index], ": ", end = "", sep = "")

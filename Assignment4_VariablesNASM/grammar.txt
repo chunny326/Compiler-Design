@@ -1,19 +1,36 @@
 # Productions
-Goal   -> Expr
-Expr   -> Term Expr'
-Expr'  -> + Term Expr'
-Expr'  -> - Term Expr'
-Expr'  -> eps
-Term   -> Ex Term'
-Term'  -> * Ex Term'
-Term'  -> / Ex Term'
-Term'  -> eps
-Ex     -> Factor Ex'
-Ex'    -> ^ Factor Ex'
-Ex'    -> eps
-Factor -> ( Expr )
-Factor -> - Neg
-Factor -> name
-Factor -> num
-Neg    -> name
-Neg    -> num
+
+Goal → Statement
+
+Statement → Declaration Assignment
+Statement → name Assignment
+Statement → print ( name )
+
+Declaration → type name
+
+Assignment → = Expression
+Assignment → null
+
+Expression → Term Expression'
+
+Expression' → + Term Expression'
+Expression' → - Term Expression'
+Expression' → null
+
+Term → Factor Term'
+
+Term' → * Factor Term'
+Term' → / Factor Term'
+Term' → null
+
+Factor → Base Power
+
+Power → ^ Base Power
+Power → null
+
+Base → ( Expression )
+Base → Base'
+Base → - Base'
+
+Base' → number
+Base' → name

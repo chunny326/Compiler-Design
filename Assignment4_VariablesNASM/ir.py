@@ -98,7 +98,7 @@ def shunting_yard(tokens):
             if tok.type.name == 'EOF':
                 print("Shunting Yard algorithm done processing.\n")
             
-            elif tok.type.value == 'name' or tok.type.value == 'num': 
+            elif tok.type.value == 'name' or tok.type.value == 'number': 
                 # add token to back of queue if it is a value or variable
                 line_queue.append(tok.value)
                 prev_tok = '#'

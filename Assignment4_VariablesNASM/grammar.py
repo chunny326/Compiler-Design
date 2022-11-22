@@ -16,7 +16,14 @@ class Grammar:
         
     def nonterms(self):
         # set of nonterminals and associated rules
-        return list(self.rules.keys())
+        temp_nonterms = list(self.rules.keys())
+
+        # add in nonterminals that appear on rhs of rules
+        # temp_nonterms.append('type')
+        # temp_nonterms.append('=')
+        # temp_nonterms.append('print')
+        
+        return temp_nonterms
         
     def terms(self):
         # everything on rhs not in nonterminals is terminal
