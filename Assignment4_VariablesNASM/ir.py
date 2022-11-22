@@ -8,7 +8,8 @@ operator_prec = {
     'MUL':    2,
     'DIV':    2,
     'PLUS':   3,
-    'MINUS':  3
+    'MINUS':  3,
+    'EQ':     4
 }
 
 def higher_precedence(op1, op2):
@@ -118,6 +119,10 @@ def shunting_yard(tokens):
                 prev_tok = 'op'
                 op_stack.append(tok)
             
+            elif tok.type.value == 'print':
+                op_stack.append(tok)
+                prev_tok = 'func'
+
             # opening parens behaves like beginning of an expression
             elif tok.type.value == '(':
                 op_stack.append(tok)

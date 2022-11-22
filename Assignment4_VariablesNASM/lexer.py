@@ -108,8 +108,7 @@ class Lexer:
         if self.cur_char == None:
             pass
         elif self.cur_char.isalpha():
-            number_str += self.cur_char
-            raise Exception(f"Illegal character stream '{number_str}'")
+            return(Token(TokenType.DECIMAL))
 
         while self.cur_char != None and (self.cur_char == '.' or self.cur_char in DIGITS):
             if self.cur_char == '.':

@@ -26,9 +26,9 @@ class TokenType(Enum):
     BACKSLASH  = '\\'
 
     # keywords
-    NUM        = 20
-    PRINT      = 21
-    FLUM       = 22
+    NUM        = 'num'
+    PRINT      = 'print'
+    FLUM       = 'flum'
 
 @dataclass
 class Token:
@@ -40,7 +40,6 @@ class Token:
 
     def checkIfKeyword(tokenText):
         for kind in TokenType:
-            # 20-22 will change as more keywords are added
-            if kind.name.lower() == tokenText and (kind.value >= 20 and kind.value <= 22):
+            if kind.name.lower() == tokenText and kind.value in ['num', 'print', 'flum']:
                 return kind
         return None
