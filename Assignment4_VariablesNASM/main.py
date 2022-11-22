@@ -8,7 +8,8 @@ from ir import shunting_yard, optimize_post_order
 def print_next_post_order(post_ord_line):
     for val in post_ord_line:
         print(val, " ", sep = "", end = "")
-    print(" ..... ", sep = "", end = "")
+    # print(" ..... ", sep = "", end = "")
+    print("\n")
 
 def print_optimizations(optimized_line):
     for val in optimized_line:
@@ -52,7 +53,7 @@ if __name__ == "__main__":
     table = construct_table(first_plus, productions)
     # ----------------------------------------------------------------------------------
 
-    # ------------------------------- PROCESS INPUT FILE -------------------------------
+    # ---------------------------- PROCESS VALID INPUT FILE --------------------S--------
     # read in valid lines file from book
     with open('Notes/accept.txt', 'r') as file:
         text = file.read()
@@ -115,3 +116,64 @@ if __name__ == "__main__":
                 valid = True
             index = index + 1
     # ----------------------------------------------------------------------------------
+
+    # ------------------------------ PROCESS INVALID INPUT FILE ------------------------------
+    # read in valid lines file from book
+    with open('Notes/reject.txt', 'r') as file1:
+        text1 = file1.read()
+
+    # tokenize file
+    lexer1 = Lexer(text1)
+    print("\nScanning ", file1.name, "...", sep = "")
+    tokens1 = lexer1.gen_tokens()
+
+    parse1 = Parser(tokens1, False)
+    print("\nParsing ", file1.name, "...", sep = "")
+    parse_results1 = parse1.skeleton_parser(table, productions)
+
+    # get another copy of the set of tokens from file to pass to Shunting Yard algorithm
+    lexer2 = Lexer(text1)
+    tokens2 = lexer2.gen_tokens()
+    toks1 = list(tokens2)
+
+    # run the Shunting Yard algorithm to get queue with post-order traversal
+    # print("\nRunning Shunting Yard algorithm to create post-order traversal...\n", sep = "")
+    # post_order1 = shunting_yard(toks1)
+    # -------------------------------------------------------------------------------------
+
+    # ------------------------------- PRINT INVALID RESULTS -------------------------------
+    print("Printing results:\n")
+    index1 = 0
+    
+    print(parse_results1[index1], ": ", end = "", sep = "")
+    valid1 = True
+    if parse_results1[index1] == 'Invalid':
+        valid1 = False
+    index1 = index1 + 1
+
+    for tok1 in toks1:
+        if tok1.type.value != TokenType.NEWLINE.value:
+            if tok1.type.value == 'name' or tok1.type.value == 'number':
+                print(tok1.value, " ", end = "")
+            elif tok1.type.name == 'EOF':
+                print("End of file. Done processing.\n")
+            else:
+                print(tok1.type.value, " ", end = "")
+        else:
+            # for all invalid lines of code, only display "Invalid"
+            if valid1 == False:
+                continue
+
+            # print post-order and optimized post-order
+            print(".....  ", end = "")
+            # print_next_post_order(post_order1[index1 - 1])
+
+            # print next line result
+            print(parse_results1[index1], ": ", end = "", sep = "")
+            if parse_results1[index1] == 'Invalid':
+                valid1 = False
+            else:
+                valid1 = True
+            index1 = index1 + 1
+    # ----------------------------------------------------------------------------------
+
