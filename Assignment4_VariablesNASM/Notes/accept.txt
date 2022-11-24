@@ -58,6 +58,10 @@ num var29 = (1+2) * 3
 print(var29)
 num var30 = ((var1/var2)+(var3*var4))
 print(var30)
+num a = 1
+num a_ = 2
+num v_____2 = 2
+num v__3__ = 3
 num var31 = a_
 print(var31)
 num var32 = (a_)

@@ -59,29 +59,28 @@ if __name__ == "__main__":
         text = file.read()
 
     # tokenize file
+    symbol_table = {}
     lexer = Lexer(text)
     print("\nScanning ", file.name, "...", sep = "")
-    tokens = lexer.gen_tokens()
+    tokens = lexer.gen_tokens(symbol_table)
 
     parse = Parser(tokens, False)
     print("\nParsing ", file.name, "...", sep = "")
     parse_results = parse.skeleton_parser(table, productions)
 
     # get another copy of the set of tokens from file to pass to Shunting Yard algorithm
+    symbol_table2 = {}
     lexer2 = Lexer(text)
-    tokens2 = lexer2.gen_tokens()
+    tokens2 = lexer2.gen_tokens(symbol_table2)
     toks = list(tokens2)
 
     # run the Shunting Yard algorithm to get queue with post-order traversal
     print("\nRunning Shunting Yard algorithm to create post-order traversal...\n", sep = "")
     post_order = shunting_yard(toks)
-
-    # run optimizations
-    # optimized_post_order = optimize_post_order(post_order)
     # -------------------------------------------------------------------------------------
 
     # ----------------------------------- print results -----------------------------------
-    print("Printing results:\n")
+    print("Parsing and creating post-order trees...\n\n")
     index = 0
     
     print(parse_results[index], ": ", end = "", sep = "")
@@ -123,57 +122,21 @@ if __name__ == "__main__":
         text1 = file1.read()
 
     # tokenize file
+    symbol_table3 = {}
     lexer1 = Lexer(text1)
-    print("\nScanning ", file1.name, "...", sep = "")
-    tokens1 = lexer1.gen_tokens()
+    print("\n\nScanning ", file1.name, "...", sep = "")
+    tokens1 = lexer1.gen_tokens(symbol_table3)
 
     parse1 = Parser(tokens1, False)
-    print("\nParsing ", file1.name, "...", sep = "")
+    print("\nParsing ", file1.name, "...\n", sep = "")
     parse_results1 = parse1.skeleton_parser(table, productions)
 
     # get another copy of the set of tokens from file to pass to Shunting Yard algorithm
+    symbol_table4 = {}
     lexer2 = Lexer(text1)
-    tokens2 = lexer2.gen_tokens()
+    tokens2 = lexer2.gen_tokens(symbol_table4)
     toks1 = list(tokens2)
 
-    # run the Shunting Yard algorithm to get queue with post-order traversal
-    # print("\nRunning Shunting Yard algorithm to create post-order traversal...\n", sep = "")
-    # post_order1 = shunting_yard(toks1)
-    # -------------------------------------------------------------------------------------
-
-    # ------------------------------- PRINT INVALID RESULTS -------------------------------
-    print("Printing results:\n")
-    index1 = 0
-    
-    print(parse_results1[index1], ": ", end = "", sep = "")
-    valid1 = True
-    if parse_results1[index1] == 'Invalid':
-        valid1 = False
-    index1 = index1 + 1
-
-    for tok1 in toks1:
-        if tok1.type.value != TokenType.NEWLINE.value:
-            if tok1.type.value == 'name' or tok1.type.value == 'number':
-                print(tok1.value, " ", end = "")
-            elif tok1.type.name == 'EOF':
-                print("End of file. Done processing.\n")
-            else:
-                print(tok1.type.value, " ", end = "")
-        else:
-            # for all invalid lines of code, only display "Invalid"
-            if valid1 == False:
-                continue
-
-            # print post-order and optimized post-order
-            print(".....  ", end = "")
-            # print_next_post_order(post_order1[index1 - 1])
-
-            # print next line result
-            print(parse_results1[index1], ": ", end = "", sep = "")
-            if parse_results1[index1] == 'Invalid':
-                valid1 = False
-            else:
-                valid1 = True
-            index1 = index1 + 1
+    print("\nEnd of file. Done processing.\n")
     # ----------------------------------------------------------------------------------
 

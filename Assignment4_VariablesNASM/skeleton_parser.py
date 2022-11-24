@@ -36,6 +36,15 @@ class Parser:
         # parse file until done
         while self.cur_token != None:
             word = self.cur_token
+
+            # check for blank line
+            if word.type.value == 'eof':
+                count = count + 1
+                self.parse_results.append("Valid")
+                # print("Line", count, "is valid\n")
+                self.advance()
+                continue
+
             stack = []
             stack.append('eof')
             stack.append('Goal')
@@ -57,7 +66,7 @@ class Parser:
                 if focus == 'eof' and (word_type == 'eof' or word_type == 'f'):
                     count = count + 1
                     self.parse_results.append("Valid")
-                    # print("Line", count, "is valid\n")
+                    # print("Line", count, "is valid")
                     self.advance()
                     word = self.cur_token
                     break
@@ -70,7 +79,7 @@ class Parser:
                     else:
                         count = count + 1
                         self.parse_results.append("Invalid")
-                        # print("Line", count, "is invalid\n")
+                        print("ERROR Line ", count, ": Line not supported by language grammar", sep = "")
 
                         # give up on this line, parse the next line
                         while (self.cur_token.type.value != 'eof'):
@@ -87,7 +96,7 @@ class Parser:
                             stack.pop()
                             focus = stack[-1]
                         continue
-
+                    
                     if (focus, word_type) in table.keys() and \
                           table[(focus, word_type)] != -1:
                         stack.pop()
@@ -103,7 +112,7 @@ class Parser:
                     else:
                         count = count + 1
                         self.parse_results.append("Invalid")
-                        # print("Invalid expanding focus - Line ", count, " is invalid\n")
+                        print("ERROR Line ", count, ": Line not supported by language grammar", sep = "")
                         
                         # give up on this line, parse the next line
                         while (self.cur_token.type.value != 'eof'):
