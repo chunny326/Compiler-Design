@@ -55,8 +55,9 @@ Instructions for running:
   
 Enter the following into the terminal from within the Assignment 4 directory:
 ```
-python3 main.py
-nasm -felf64 assignment4_results.asm; gcc -no-pie assignment4_results.o -o assignment4_results; ./assignment4_results
+python3 main.py | tee Results/console_output.txt
+nasm -felf64 Results/nasm_output.asm; gcc -no-pie Results/nasm_output.o -o Results/nasm_output; ./Results/nasm_output
 ```
   
-The file assignment4_results.asm will be generated and the output of running this file will be printed to the console.
+The file nasm_output.asm will be generated in the Results directory and the output of running this file will be printed to the console.
+Errors and other logging info found during the parsing and compilation process will be printed to Results/console_output.txt as well as to the console. 
