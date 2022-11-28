@@ -22,7 +22,7 @@ num var11 = 5 + 4 * 3
 print(var11)
 num var12 = 12 + 34 * 45
 print(var12)
-num var13 = (4 / 5)
+num var13 = (6 / 5)
 print(var13)
 num var14 = 2 * 2 + 5 * 5
 print(var14)
@@ -159,13 +159,3 @@ var75 = 1234
 print(var75)
 num var76=314
 print(var76)
-flum num1 = 1.23456 
-print(num1)
-flum num2 = .1
-print(num2)
-flum num3 = 3.14159
-print(num3)
-flum num4 = num2 + num3
-print(num4)
-flum num5 = num2 * num3
-print(num5)
