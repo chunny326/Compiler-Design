@@ -159,3 +159,13 @@ var75 = 1234
 print(var75)
 num var76=314
 print(var76)
+flum num1 = 1.23456 
+print(num1)
+flum num2 = .1
+print(num2)
+flum num3 = 3.14159
+print(num3)
+flum num4 = num2 + num3
+print(num4)
+flum num5 = num2 * num3
+print(num5)

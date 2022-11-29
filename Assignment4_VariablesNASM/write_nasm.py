@@ -27,6 +27,7 @@ class File():
                             'section .data\n',
                             '\n',
                             'fmtint:\t db\t\t"%d", 10, 0\n',
+                            'fmtflt:\t db\t\t"%g", 10, 0\n',
                             '\n',
 
                             ';-----------------------------\n',
@@ -69,9 +70,9 @@ class File():
         self.f.writelines([
                             '\n',
                             '\t\t; All done.\n',
-                            '\t\tmov      rax, 60                 ; system call for exit\n',
-                            '\t\txor      rdi, rdi                ; Put an exit code of 0 into the rdi register\n',
-                            '\t\tsyscall                          ; invoke operating system to exit\n'
+                            '\t\tmov     rax, 60                 ; system call for exit\n',
+                            '\t\txor     rdi, rdi                ; Put an exit code of 0 into the rdi register\n',
+                            '\t\tsyscall                         ; invoke operating system to exit\n'
                             ])
         self.f.close()
 
@@ -84,9 +85,8 @@ class File():
 
     def float_addition(self, val1, val2):
         self.f.writelines([
-                            '\t\tmov     rax, ' + str(val1) +  '       ; 64 bit value loading of data values only through rax\n',
-                            '\t\tmov     rbx, ' + str(val2) +  '\n',
-                            '\t\tadd     rax, rbx\n'
+                            '\t\tmovsd   xmm0, ' + str(val1) +  '      ; 64 bit value loading of data values only through rax\n',
+                            '\t\taddsd   xmm0, ' + str(val2) +  '\n'
                            ])
 
     def subtraction(self, val1, val2):
@@ -105,23 +105,31 @@ class File():
     
     def float_multiplication(self, val1, val2):
         self.f.writelines([
-                            '\t\tmov     rax, ' + str(val1) +  '       ; 64 bit value loading of data values only through rax\n',
-                            '\t\tmov     rbx, ' + str(val2) +  '\n',
-                            '\t\timul    rax, rbx\n'
+                            '\t\tmovsd   xmm0, ' + str(val1) +  '      ; 64 bit value loading of data values only through xmm0\n',
+                            '\t\tmovsd   xmm1, ' + str(val2) +  '      ; 64 bit value loading of data values only through xmm1\n',
+                            '\t\tmulsd   xmm0, xmm1\n'
                            ])
 
     def division(self, val1, val2):
         self.f.writelines([
-                            '\t\tmov     rdx, 0\n',
                             '\t\tmov     rax, ' + str(val1) + '\n',
                             '\t\tmov     rcx, ' + str(val2) + '\n',
-                            '\t\tdiv     rcx\n'
+                            '\t\tcqo\n',
+                            '\t\tidiv    rcx\n'
                            ])
     
     def print_int(self, offset):
         self.f.writelines([
-                            '\t\tmov     rax, ' + offset + '       ; 64 bit value loading of data values only through rax\n',
+                            '\t\tmov     rax, ' + str(offset) + '  ; 64 bit value loading of data values only through rax\n',
                             '\t\tcall    printInt\n'
+                           ])
+
+    def print_float(self, offset):
+        self.f.writelines([
+                            '\t\tmovsd   xmm0, ' + offset + '      ; xmm0 holds value to print for floats\n',
+                            '\t\tmov     rdi,  fmtflt              ; 1st argument to printf\n',
+                            '\t\tmov     rax,  1                   ; printf is varargs, there is 1 non-int argument\n',
+                            '\t\tcall    printf\n'
                            ])
 
     def int_variable_assign(self, offset, val):
@@ -132,12 +140,29 @@ class File():
     def int_variable_assign_variable(self, offset1, offset2):
         self.f.writelines([
                             '\t\tmov     rax, ' + offset2 + '\n'
-                            '\t\tmov     ' + offset1 + ', rax        ; Push variable onto stack\n'
+                            '\t\tmov     ' + offset1 + ', rax            ; Push variable onto stack\n'
                            ])
-                        
+
+    def float_variable_assign(self, offset1, offset2):
+        self.f.writelines([
+                            '\t\tmov     rax, __float64__(' + str(offset2) + ')\n'
+                            '\t\tmov     ' + str(offset1) + ', rax       ; Push variable onto stack\n'
+                           ])
+
+    def float_variable_assign_var(self, offset1, offset2):
+        self.f.writelines([
+                            '\t\tmov     rax, ' + str(offset2) + '\n'
+                            '\t\tmov     ' + str(offset1) + ', rax       ; Push variable onto stack\n'
+                           ])
+
     def add_result_to_stack(self, reg, offset):
         self.f.writelines([
-                            '\t\tmov     ' + offset + ', ' + reg + '  ; Push variable onto stack\n'
+                            '\t\tmov     ' + offset + ', ' + reg + '     ; Push variable onto stack\n'
+                           ])
+
+    def add_flum_result_to_stack(self, offset):
+        self.f.writelines([
+                            '\t\tmovsd   ' + offset + ', xmm0             ; Push variable onto stack\n'
                            ])
 
     def check_stack_top(self, top, symbol_table):
@@ -166,10 +191,17 @@ class File():
                     top1 = self.check_stack_top(stack.pop(), symbol_table)
                     
                     if node == 'print':
+                        # check if constant value from stack
                         if self.type_flag == 'number':
-                            self.print_int(top1)
+                            num1 = top1
+                        # check if variable that needs to pulled from symbol table
                         elif self.type_flag == 'variable':
-                            self.print_int(top1[0])
+                            num1 = top1[0]
+
+                        if isinstance(top1, int) or (isinstance(top1, tuple) and top1[1][0] == 'num'):
+                            self.print_int(num1)
+                        elif isinstance(top2, float) or (isinstance(top1, tuple) and top1[1][0] == 'flum'):
+                            self.print_float(num1)
                         
                     elif node == '-u':
                         # check if constant value from stack
@@ -183,14 +215,16 @@ class File():
                         if isinstance(top1, int) or (isinstance(top1, tuple) and top1[1][0] == 'num'):
                             self.int_multiplication(num1, -1)
                             op = 'num'
-
                         elif isinstance(top2, float) or (isinstance(top1, tuple) and top1[1][0] == 'flum'):
                             self.float_multiplication(num1, -1)
                             op = 'flum'
 
                         # add result back to stack and symbol table
                         self.stack_offset += 8 
-                        self.add_result_to_stack('rax', 'qword[rsp + ' + str(self.stack_offset) + ']')
+                        if op == 'num':
+                            self.add_result_to_stack('rax', 'qword[rsp + ' + str(self.stack_offset) + ']')
+                        elif op == 'flum':
+                            self.add_flum_result_to_stack('qword[rsp + ' + str(self.stack_offset) + ']')
                         temp = 'temp' + str(self.temp_var_counter)
                         symbol_table[temp] = (op, self.stack_offset)
                         stack.append(temp)
@@ -211,7 +245,7 @@ class File():
                             if isinstance(top1, float):
                                 self.float_variable_assign(top2[0], top1)
                             else:
-                                self.float_variable_assign_variable(top2[0], top1[0])
+                                self.float_variable_assign_var(top2[0], top1[0])
 
                     elif node == '+':
                         # check if constant value from stack
@@ -237,7 +271,6 @@ class File():
                               (isinstance(top2, tuple) and top2[1][0] == 'num'):
                                 self.int_addition(num2, num1)
                                 op = 'num'
-
                         elif isinstance(top2, float) or (isinstance(top1, tuple) and top1[1][0] == 'flum') or \
                              isinstance(top2, float) or (isinstance(top2, tuple) and top2[1][0] == 'flum'):
                             self.float_addition(num2, num1)
@@ -245,7 +278,10 @@ class File():
 
                         # add result back to stack and symbol table
                         self.stack_offset += 8 
-                        self.add_result_to_stack('rax', 'qword[rsp + ' + str(self.stack_offset) + ']')
+                        if op == 'num':
+                            self.add_result_to_stack('rax', 'qword[rsp + ' + str(self.stack_offset) + ']')
+                        elif op == 'flum':
+                            self.add_flum_result_to_stack('qword[rsp + ' + str(self.stack_offset) + ']')
                         temp = 'temp' + str(self.temp_var_counter)
                         symbol_table[temp] = (op, self.stack_offset)
                         stack.append(temp)
@@ -278,7 +314,10 @@ class File():
 
                         # add result back to stack and symbol table
                         self.stack_offset += 8 
-                        self.add_result_to_stack('rax', 'qword[rsp + ' + str(self.stack_offset) + ']')
+                        if op == 'num':
+                            self.add_result_to_stack('rax', 'qword[rsp + ' + str(self.stack_offset) + ']')
+                        elif op == 'flum':
+                            self.add_flum_result_to_stack('qword[rsp + ' + str(self.stack_offset) + ']')
                         temp = 'temp' + str(self.temp_var_counter)
                         symbol_table[temp] = (op, self.stack_offset)
                         stack.append(temp)
@@ -308,7 +347,6 @@ class File():
                               (isinstance(top2, tuple) and top2[1][0] == 'num'):
                                 self.int_multiplication(num2, num1)
                                 op = 'num'
-
                         elif isinstance(top2, float) or (isinstance(top1, tuple) and top1[1][0] == 'flum') or \
                              isinstance(top2, float) or (isinstance(top2, tuple) and top2[1][0] == 'flum'):
                             self.float_multiplication(num2, num1)
@@ -316,7 +354,10 @@ class File():
 
                         # add result back to stack and symbol table
                         self.stack_offset += 8 
-                        self.add_result_to_stack('rax', 'qword[rsp + ' + str(self.stack_offset) + ']')
+                        if op == 'num':
+                            self.add_result_to_stack('rax', 'qword[rsp + ' + str(self.stack_offset) + ']')
+                        elif op == 'flum':
+                            self.add_flum_result_to_stack('qword[rsp + ' + str(self.stack_offset) + ']')
                         temp = 'temp' + str(self.temp_var_counter)
                         symbol_table[temp] = (op, self.stack_offset)
                         stack.append(temp)
@@ -346,7 +387,6 @@ class File():
                               (isinstance(top2, tuple) and top2[1][0] == 'num'):
                                 self.division(num2, num1)
                                 op = 'num'
-
                         elif isinstance(top2, float) or (isinstance(top1, tuple) and top1[1][0] == 'flum') or \
                              isinstance(top2, float) or (isinstance(top2, tuple) and top2[1][0] == 'flum'):
                             self.float_division(num2, num1)
@@ -354,13 +394,14 @@ class File():
 
                         # add result back to stack and symbol table
                         self.stack_offset += 8 
-                        self.add_result_to_stack('rax', 'qword[rsp + ' + str(self.stack_offset) + ']')
+                        if op == 'num':
+                            self.add_result_to_stack('rax', 'qword[rsp + ' + str(self.stack_offset) + ']')
+                        elif op == 'flum':
+                            self.add_flum_result_to_stack('qword[rsp + ' + str(self.stack_offset) + ']')
                         temp = 'temp' + str(self.temp_var_counter)
                         symbol_table[temp] = (op, self.stack_offset)
                         stack.append(temp)
                         self.temp_var_counter += 1
-
-                    # elif node == '^':
 
                 else:                
                     stack.append(node)

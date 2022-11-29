@@ -91,43 +91,6 @@ if __name__ == "__main__":
     print("\nEnd of file. Done processing.\n")
     # -------------------------------------------------------------------------------------
 
-    # ----------------------------------- print results -----------------------------------
-    # print("Printing parse results and post-order trees...\n\n")
-    # index = 0
-    
-    # print(parse_results[index], ": ", end = "", sep = "")
-    # valid = True
-    # if parse_results[index] == 'Invalid':
-    #     valid = False
-    # index = index + 1
-
-    # for tok in toks:
-    #     if tok.type.value != TokenType.NEWLINE.value:
-    #         if tok.type.value == 'name' or tok.type.value == 'number':
-    #             print(tok.value, " ", end = "")
-    #         elif tok.type.name == 'EOF':
-    #             print("End of file. Done processing.\n")
-    #         else:
-    #             print(tok.type.value, " ", end = "")
-    #     else:
-    #         # for all invalid lines of code, only display "Invalid"
-    #         if valid == False:
-    #             continue
-
-    #         # print post-order and optimized post-order
-    #         print(".....  ", end = "")
-    #         print_next_post_order(post_order[index - 1])
-    #         # print_optimizations(optimized_post_order[index - 1])
-
-    #         # print next line result
-    #         print(parse_results[index], ": ", end = "", sep = "")
-    #         if parse_results[index] == 'Invalid':
-    #             valid = False
-    #         else:
-    #             valid = True
-    #         index = index + 1
-    # ----------------------------------------------------------------------------------
-
     # ------------------------------ PROCESS INVALID INPUT FILE ------------------------------
     # read in valid lines file from book
     with open('Notes/reject.txt', 'r') as file1:

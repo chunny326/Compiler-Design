@@ -9,3 +9,176 @@ Running Shunting Yard algorithm to create post-order traversal...
 
 Shunting Yard algorithm done processing.
 
+NASM assembly file created and ready to execute.
+
+
+End of file. Done processing.
+
+
+
+Scanning Notes/reject.txt...
+
+Parsing Notes/reject.txt...
+
+ERROR Line 2: Symbol table - Redeclaration of: oktobad1
+ERROR Line 4: Variable never declared: bad0
+ERROR Line 6: Variable never declared: numvar2
+ERROR Line 8: Line not supported by language grammar
+ERROR Line 10: Line not supported by language grammar
+ERROR Line 12: Line not supported by language grammar
+ERROR Line 14: Line not supported by language grammar
+ERROR Line 18: Line not supported by language grammar
+ERROR Line 20: Invalid token: ,
+ERROR Line 20: Line not supported by language grammar
+ERROR Line 20: Variable never declared: bad4
+ERROR Line 22: Line not supported by language grammar
+ERROR Line 24: Line not supported by language grammar
+ERROR Line 25: Invalid token: _
+ERROR Line 25: Line not supported by language grammar
+ERROR Line 26: Line not supported by language grammar
+ERROR Line 28: Line not supported by language grammar
+ERROR Line 28: Variable never declared: y
+ERROR Line 29: Line not supported by language grammar
+ERROR Line 30: Variable never declared: a
+ERROR Line 30: Variable never declared: b
+ERROR Line 30: Line not supported by language grammar
+ERROR Line 31: Variable never declared: a
+ERROR Line 31: Variable never declared: b
+ERROR Line 31: Line not supported by language grammar
+ERROR Line 32: Line not supported by language grammar
+ERROR Line 33: Line not supported by language grammar
+ERROR Line 34: Line not supported by language grammar
+ERROR Line 36: Line not supported by language grammar
+ERROR Line 36: Variable never declared: a
+ERROR Line 37: Line not supported by language grammar
+ERROR Line 38: Line not supported by language grammar
+ERROR Line 39: Line not supported by language grammar
+ERROR Line 40: Line not supported by language grammar
+ERROR Line 41: Variable never declared: a
+ERROR Line 41: Variable never declared: b
+ERROR Line 41: Variable never declared: c
+ERROR Line 41: Variable never declared: d
+ERROR Line 41: Line not supported by language grammar
+ERROR Line 42: Line not supported by language grammar
+ERROR Line 43: Line not supported by language grammar
+ERROR Line 43: Variable never declared: var
+ERROR Line 44: Line not supported by language grammar
+ERROR Line 45: Line not supported by language grammar
+ERROR Line 46: Variable never declared: var
+ERROR Line 46: Line not supported by language grammar
+ERROR Line 47: Line not supported by language grammar
+ERROR Line 47: Variable never declared: var
+ERROR Line 48: Variable never declared: var
+ERROR Line 48: Line not supported by language grammar
+ERROR Line 49: Variable never declared: var1
+ERROR Line 49: Line not supported by language grammar
+ERROR Line 50: Line not supported by language grammar
+ERROR Line 51: Variable never declared: a
+ERROR Line 51: Line not supported by language grammar
+ERROR Line 51: Variable never declared: b
+ERROR Line 51: Variable never declared: c
+ERROR Line 52: Variable never declared: obj1
+ERROR Line 52: Line not supported by language grammar
+ERROR Line 52: Variable never declared: runMethod
+ERROR Line 53: Variable never declared: printf
+ERROR Line 53: Line not supported by language grammar
+ERROR Line 53: Invalid token: "
+ERROR Line 53: Variable never declared: Hello
+ERROR Line 53: Invalid token: ,
+ERROR Line 53: Variable never declared: World
+ERROR Line 53: Invalid token: !
+ERROR Line 53: Invalid token: \
+ERROR Line 53: Variable never declared: n
+ERROR Line 53: Invalid token: "
+ERROR Line 53: Invalid token: ;
+ERROR Line 54: Variable never declared: return
+ERROR Line 54: Line not supported by language grammar
+ERROR Line 55: Variable never declared: class
+ERROR Line 55: Variable never declared: Foo
+ERROR Line 55: Line not supported by language grammar
+ERROR Line 56: Variable never declared: operator
+ERROR Line 56: Line not supported by language grammar
+ERROR Line 57: Variable never declared: obj1
+ERROR Line 57: Line not supported by language grammar
+ERROR Line 57: Variable never declared: operator
+ERROR Line 57: Variable never declared: obj2
+ERROR Line 58: Line not supported by language grammar
+ERROR Line 59: Line not supported by language grammar
+ERROR Line 59: Variable never declared: var
+ERROR Line 60: Line not supported by language grammar
+ERROR Line 61: Line not supported by language grammar
+ERROR Line 62: Line not supported by language grammar
+ERROR Line 63: Line not supported by language grammar
+ERROR Line 64: Invalid token: _
+ERROR Line 64: Line not supported by language grammar
+ERROR Line 64: Variable never declared: underscore
+ERROR Line 65: Invalid token: _
+ERROR Line 65: Line not supported by language grammar
+ERROR Line 65: Variable never declared: var1
+ERROR Line 65: Invalid token: _
+ERROR Line 65: Variable never declared: var2
+ERROR Line 66: Line not supported by language grammar
+ERROR Line 67: Line not supported by language grammar
+ERROR Line 68: Line not supported by language grammar
+ERROR Line 68: Variable never declared: a
+ERROR Line 69: Line not supported by language grammar
+ERROR Line 69: Variable never declared: a
+ERROR Line 70: Line not supported by language grammar
+ERROR Line 71: Line not supported by language grammar
+ERROR Line 71: Variable never declared: a
+ERROR Line 2: Symbol table - Redeclaration of: oktobad1
+ERROR Line 4: Variable never declared: bad0
+ERROR Line 6: Variable never declared: numvar2
+ERROR Line 20: Invalid token: ,
+ERROR Line 20: Variable never declared: bad4
+ERROR Line 25: Invalid token: _
+ERROR Line 28: Variable never declared: y
+ERROR Line 30: Variable never declared: a
+ERROR Line 30: Variable never declared: b
+ERROR Line 31: Variable never declared: a
+ERROR Line 31: Variable never declared: b
+ERROR Line 36: Variable never declared: a
+ERROR Line 41: Variable never declared: a
+ERROR Line 41: Variable never declared: b
+ERROR Line 41: Variable never declared: c
+ERROR Line 41: Variable never declared: d
+ERROR Line 43: Variable never declared: var
+ERROR Line 46: Variable never declared: var
+ERROR Line 47: Variable never declared: var
+ERROR Line 48: Variable never declared: var
+ERROR Line 49: Variable never declared: var1
+ERROR Line 51: Variable never declared: a
+ERROR Line 51: Variable never declared: b
+ERROR Line 51: Variable never declared: c
+ERROR Line 52: Variable never declared: obj1
+ERROR Line 52: Variable never declared: runMethod
+ERROR Line 53: Variable never declared: printf
+ERROR Line 53: Invalid token: "
+ERROR Line 53: Variable never declared: Hello
+ERROR Line 53: Invalid token: ,
+ERROR Line 53: Variable never declared: World
+ERROR Line 53: Invalid token: !
+ERROR Line 53: Invalid token: \
+ERROR Line 53: Variable never declared: n
+ERROR Line 53: Invalid token: "
+ERROR Line 53: Invalid token: ;
+ERROR Line 54: Variable never declared: return
+ERROR Line 55: Variable never declared: class
+ERROR Line 55: Variable never declared: Foo
+ERROR Line 56: Variable never declared: operator
+ERROR Line 57: Variable never declared: obj1
+ERROR Line 57: Variable never declared: operator
+ERROR Line 57: Variable never declared: obj2
+ERROR Line 59: Variable never declared: var
+ERROR Line 64: Invalid token: _
+ERROR Line 64: Variable never declared: underscore
+ERROR Line 65: Invalid token: _
+ERROR Line 65: Variable never declared: var1
+ERROR Line 65: Invalid token: _
+ERROR Line 65: Variable never declared: var2
+ERROR Line 68: Variable never declared: a
+ERROR Line 69: Variable never declared: a
+ERROR Line 71: Variable never declared: a
+
+End of file. Done processing.
+
