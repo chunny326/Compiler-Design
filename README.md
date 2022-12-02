@@ -61,3 +61,18 @@ nasm -felf64 Results/nasm_output.asm; gcc -no-pie Results/nasm_output.o -o Resul
   
 The file nasm_output.asm will be generated in the Results directory and the output of running this file will be printed to the console.
 Errors and other logging info found during the parsing and compilation process will be printed to Results/console_output.txt and also to the console. 
+
+-------------------------------------------------------------------------------------------------
+
+## Assignment 5 - if's, while loops, and functions
+
+Instructions for running:
+  
+Enter the following into the terminal from within the Assignment 5 directory:
+```
+python3 main.py | tee Results/console_output.txt
+nasm -felf64 Results/nasm_output.asm; gcc -no-pie Results/nasm_output.o -o Results/nasm_output; ./Results/nasm_output
+```
+  
+The file nasm_output.asm will be generated in the Results directory and the output of running this file will be printed to the console.
+Errors and other logging info found during the parsing and compilation process will be printed to Results/console_output.txt and also to the console. 

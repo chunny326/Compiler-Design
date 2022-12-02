@@ -1,0 +1,36 @@
+# Productions
+
+Goal → Statement
+
+Statement → Declaration Assignment
+Statement → name Assignment
+Statement → print ( name )
+
+Declaration → type name
+
+Assignment → = Expression
+Assignment → null
+
+Expression → Term Expression'
+
+Expression' → + Term Expression'
+Expression' → - Term Expression'
+Expression' → null
+
+Term → Factor Term'
+
+Term' → * Factor Term'
+Term' → / Factor Term'
+Term' → null
+
+Factor → Base Power
+
+Power → ^ Base Power
+Power → null
+
+Base → ( Expression )
+Base → Base'
+Base → - Base'
+
+Base' → number
+Base' → name
