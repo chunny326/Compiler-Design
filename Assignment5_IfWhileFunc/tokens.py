@@ -49,6 +49,6 @@ class Token:
 
     def checkIfKeyword(tokenText):
         for kind in TokenType:
-            if kind.name.lower() == tokenText and kind.value in ['num', 'print', 'flum', 'if', 'while', 'function', 'gift']: 
+            if kind.name.lower() == tokenText and kind.value in ['num', 'print', 'flum', 'if', 'while', 'function', 'param1', 'param2', 'param3', 'gift']: 
                 return kind
         return None

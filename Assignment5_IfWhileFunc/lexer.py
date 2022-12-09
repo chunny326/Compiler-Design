@@ -11,6 +11,7 @@ class Lexer:
         self.offset_count = 0
         self.prev_token = ''
         self.scope_level = 0
+        self.inside_func = ''
 
     def advance(self):
         try:
@@ -141,12 +142,12 @@ class Lexer:
         keyword = Token.checkIfKeyword(alpha_str)
 
         if keyword == None:
-            # found an Identifier, check if variable has a type or is being redeclared
+            # found an Identifier, check if variable has a type, is a function, or is being redeclared
             if self.prev_token == 'num':
                 # check if not already in symbol table OR
                 # variable is in symbol table, check if variable being declared in new scope
-                if alpha_str not in sym_table or self.scope_level != sym_table[alpha_str][2]:
-                    sym_table[alpha_str] = ('num', self.offset_count * 8, self.scope_level)
+                if alpha_str not in sym_table or self.scope_level != sym_table[alpha_str][2] or self.inside_func != '':
+                    sym_table[alpha_str] = ('num', self.offset_count * 8, self.scope_level, self.line_count)
                     self.offset_count += 1
                 # reject if being declared again
                 else:
@@ -154,8 +155,16 @@ class Lexer:
             elif self.prev_token == 'flum':
                 # check if already in symbol table
                 if alpha_str not in sym_table or self.scope_level != sym_table[alpha_str][2]:
-                    sym_table[alpha_str] = ('flum', self.offset_count * 8, self.scope_level)
+                    sym_table[alpha_str] = ('flum', self.offset_count * 8, self.scope_level, self.line_count)
                     self.offset_count += 1
+                # reject if being declared again
+                else:
+                    print("ERROR Line ", self.line_count, ": Symbol table - Redeclaration of: ", alpha_str, sep = "")
+            elif self.prev_token == 'function':
+                # check if not already in symbol table
+                if alpha_str not in sym_table:
+                    self.inside_func = alpha_str
+                    sym_table[alpha_str] = ('function', self.line_count)
                 # reject if being declared again
                 else:
                     print("ERROR Line ", self.line_count, ": Symbol table - Redeclaration of: ", alpha_str, sep = "")
@@ -167,11 +176,10 @@ class Lexer:
             self.prev_token = 'var'
             return Token(TokenType.IDENTIFIER, alpha_str)
         else:
-            # found a keyword 
-            if keyword.value == 'num':
-                self.prev_token = 'num'
-            elif keyword.value == 'flum':
-                self.prev_token = 'flum'
+            self.prev_token = keyword.value
+            # function scope is now ended because nothing can occur after gift
+            if keyword == 'gift':
+                self.inside_func = ''
             return Token(keyword)
         
     def gen_num(self):

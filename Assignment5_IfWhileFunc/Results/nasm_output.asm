@@ -1055,3 +1055,24 @@ main:
 		mov     rax, qword[rsp + 808]
 		mov     qword[rsp + 728], rax            ; Push variable onto stack
 		mov     rax, qword[rsp + 720]       ; 64 bit value loading of data values only through rax
+		mov     rbx, 1
+		sub     rax, rbx
+		mov     qword[rsp + 808], rax     ; Push variable onto stack
+		mov     rax, qword[rsp + 808]
+		mov     qword[rsp + 720], rax            ; Push variable onto stack
+		mov     rax, qword[rsp + 712]       ; 64 bit value loading of data values only through rax
+		mov     rbx, 1
+		sub     rax, rbx
+		mov     qword[rsp + 808], rax     ; Push variable onto stack
+		mov     rax, qword[rsp + 808]
+		mov     qword[rsp + 712], rax            ; Push variable onto stack
+		mov     rax, qword[rsp + 704]       ; 64 bit value loading of data values only through rax
+		mov     rbx, 1
+		sub     rax, rbx
+		mov     qword[rsp + 808], rax     ; Push variable onto stack
+		mov     rax, qword[rsp + 808]
+		mov     qword[rsp + 704], rax            ; Push variable onto stack
+		mov     rax, qword[rsp + 736]  ; 64 bit value loading of data values only through rax
+		call    printInt
+		mov     qword[rsp + 744], 1234        ; Push variable onto stack
+		mov     qword[rsp + 752], 0        ; Push variable onto stack
