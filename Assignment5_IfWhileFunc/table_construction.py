@@ -21,15 +21,18 @@ def find_first(grammar):
             for expression in grammar.rules[nt]:
                 if 'eps' not in expression and 'eof' not in expression:
                     if 'eps' in first[expression[0]]:
-                        rhs = deepcopy(first[expression[0]].remove('eps'))
+                        rhs = deepcopy(first[expression[0]])
+                        rhs.remove('eps')
                     else:
                         rhs = deepcopy(first[expression[0]])
 
                     i = 0
                     k = len(expression)
 
-                    while ('eps' in first[expression[i]] and i <= k - 1):
-                        union(rhs, expression[i + 1].remove('eps'))
+                    while ('eps' in first[expression[i]] and i < k - 1):
+                        temp = expression[i + 1]
+                        temp.remove('eps')
+                        union(rhs, temp)
                         i = i + 1
 
                 if i == len(expression) - 1 and 'eps' in first[expression[-1]]:
@@ -41,8 +44,8 @@ def find_first(grammar):
         if not updated:
             return first
 
-def find_follow(grammar, _first):
-    first = deepcopy(_first)
+def find_follow(grammar, first):
+    _first = deepcopy(first)
     follow = {i: [] for i in grammar.nonterminals}
 
     follow['Goal'].append('eof')
@@ -60,14 +63,14 @@ def find_follow(grammar, _first):
                     if expression[i] in grammar.nonterminals:
                         updated |= union(follow[expression[i]], trailer)
 
-                        if 'eps' in first[expression[i]]:
-                            first[expression[i]].remove('eps')
-                            union(trailer, first[expression[i]])
-                            first[expression[i]].append('eps')
+                        if 'eps' in _first[expression[i]]:
+                            _first[expression[i]].remove('eps')
+                            union(trailer, _first[expression[i]])
+                            _first[expression[i]].append('eps')
                         else:
-                            trailer = first[expression[i]]
+                            trailer = deepcopy(_first[expression[i]])
                     else:
-                        trailer = first[expression[i]]
+                        trailer = deepcopy(_first[expression[i]])
 
                     i = i - 1
 

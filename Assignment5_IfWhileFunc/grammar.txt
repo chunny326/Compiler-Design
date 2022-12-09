@@ -1,36 +1,46 @@
 # Productions
 
-Goal → Statement
-
-Statement → Declaration Assignment
-Statement → name Assignment
-Statement → print ( name )
-
-Declaration → type name
-
-Assignment → = Expression
-Assignment → null
-
-Expression → Term Expression'
-
-Expression' → + Term Expression'
-Expression' → - Term Expression'
-Expression' → null
-
-Term → Factor Term'
-
-Term' → * Factor Term'
-Term' → / Factor Term'
-Term' → null
-
-Factor → Base Power
-
-Power → ^ Base Power
-Power → null
-
-Base → ( Expression )
-Base → Base'
-Base → - Base'
-
-Base' → number
-Base' → name
+'Goal->Line',
+'Line->dtype Var',
+'Line->name FunctionCheck',
+'Line->print ( Expr )',
+'Line->function FunctionDef',
+'Line->if ( Expr ) {',
+'Line->while ( Expr ) {',
+'Line->gift Expr',
+'Line->}',
+'FunctionDef->name ( ) {',
+'FunctionCheck->( FunctionParam1 )',
+'FunctionCheck->Right',
+'FunctionParam1->Expr FunctionParam2',
+'FunctionParam1->eps',
+'FunctionParam2->, Expr FunctionParam2',
+'FunctionParam2->eps',
+'Dtype->dtype',
+'Dtype->eps',
+'Var->name Right',
+'Right->= Expr',
+'Right->eps',
+'Expr->Term Expr1',
+'Expr1->+ Term Expr1',
+'Expr1->- Term Expr1',
+'Expr1->eps',
+'Term->Factor Term1',
+'Term1->* Factor Term1',
+'Term1->/ Factor Term1',
+'Term1->eps',
+'Factor->Base Pow',
+'Pow->^ Base Pow',
+'Pow->eps',
+'Base->( Expr )',
+'Base->number',
+'Base->name MaybeFunctionCall',
+'Base->flum',
+'Base->param',
+'Base->- Neg',
+'Neg->number',
+'Neg->flum',
+'Neg->name MaybeFunctionCall',
+'Neg->param',
+'MaybeFunctionCall->( FunctionParam1 )',
+'MaybeFunctionCall->eps'

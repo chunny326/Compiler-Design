@@ -16,14 +16,16 @@ class Parser:
         # e.g. Base->num and Base->name are indices 21: 0 and 22: 1
         self.rules_lut_class = { 
                            0: 0, 1: 0, 2: 1, 3: 2,
-                           4: 3, 5: 4, 6: 0, 7: 1,
-                           8: 2, 9: 3, 10: 0, 11: 1,
-                           12: 0, 13: 1, 14: 0, 15: 0,
-                           16: 1, 17: 0, 18: 0, 19: 1,
-                           20: 2, 21: 0, 22: 0, 23: 1,
+                           4: 3, 5: 4, 6: 5, 7: 6,
+                           8: 7, 9: 0, 10: 0, 11: 1,
+                           12: 0, 13: 1, 14: 0, 15: 1,
+                           16: 0, 17: 1, 18: 0, 19: 0,
+                           20: 1, 21: 0, 22: 0, 23: 1,
                            24: 2, 25: 0, 26: 0, 27: 1,
-                           28: 0, 29: 1, 30: 2, 31: 3,
-                           32: 0, 33: 1, 34: 0, 35: 1
+                           28: 2, 29: 0, 30: 0, 31: 1,
+                           32: 0, 33: 1, 34: 2, 35: 3,
+                           36: 4, 37: 5, 38: 0, 39: 1,
+                           40: 2, 41: 3, 42: 0, 43: 1
                          }
         
     def advance(self):
@@ -57,11 +59,13 @@ class Parser:
             while True:
                 # check for specific types to match with production names
                 if word.type.name in ['NUM', 'FLUM']:
-                    word_type = 'type'
+                    word_type = 'dtype'
                 elif word.type.name in ['IDENTIFIER']:
                     word_type = 'name'
-                elif word.type.name in ['PRINT', 'IF', 'WHILE', 'FUNCTION', 'PARAM1', 'PARAM2', 'PARAM3', 'GIFT']:
+                elif word.type.name in ['PRINT', 'IF', 'WHILE', 'FUNCTION', 'GIFT']:
                     word_type = word.type.name.lower()
+                elif word.type.name in ['PARAM1', 'PARAM2', 'PARAM3']:
+                    word_type = 'param'
                 else:
                     word_type = word.type.value
 
