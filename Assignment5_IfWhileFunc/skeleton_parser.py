@@ -16,11 +16,14 @@ class Parser:
         # e.g. Base->num and Base->name are indices 21: 0 and 22: 1
         self.rules_lut_class = { 
                            0: 0, 1: 0, 2: 1, 3: 2,
-                           4: 0, 5: 0, 6: 1, 7: 0,
-                           8: 0, 9: 1, 10: 2, 11: 0,
-                           12: 0, 13: 1, 14: 2, 15: 0,
-                           16: 0, 17: 1, 18: 0, 19: 1,
-                           20: 2, 21: 0, 22: 1
+                           4: 3, 5: 4, 6: 0, 7: 1,
+                           8: 2, 9: 3, 10: 0, 11: 1,
+                           12: 0, 13: 1, 14: 0, 15: 0,
+                           16: 1, 17: 0, 18: 0, 19: 1,
+                           20: 2, 21: 0, 22: 0, 23: 1,
+                           24: 2, 25: 0, 26: 0, 27: 1,
+                           28: 0, 29: 1, 30: 2, 31: 3,
+                           32: 0, 33: 1, 34: 0, 35: 1
                          }
         
     def advance(self):
@@ -57,8 +60,8 @@ class Parser:
                     word_type = 'type'
                 elif word.type.name in ['IDENTIFIER']:
                     word_type = 'name'
-                elif word.type.name in ['PRINT']:
-                    word_type = 'print'
+                elif word.type.name in ['PRINT', 'IF', 'WHILE', 'FUNCTION', 'PARAM1', 'PARAM2', 'PARAM3', 'GIFT']:
+                    word_type = word.type.name.lower()
                 else:
                     word_type = word.type.value
 

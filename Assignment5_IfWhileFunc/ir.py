@@ -119,7 +119,7 @@ def shunting_yard(tokens):
                 prev_tok = 'op'
                 op_stack.append(tok)
             
-            elif tok.type.value == 'print':
+            elif tok.type.value in ['print', 'function', 'if', 'while', 'gift']:
                 op_stack.append(tok)
                 prev_tok = 'func'
 

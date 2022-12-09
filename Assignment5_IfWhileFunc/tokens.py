@@ -15,6 +15,8 @@ class TokenType(Enum):
     EQ         = '='
     LPAREN     = '('
     RPAREN     = ')'
+    LBRACE     = '{'
+    RBRACE     = '}'
     SEMICOLON  = ';'
     QUOTES     = '"'
     EOF        = 'f'
@@ -29,6 +31,13 @@ class TokenType(Enum):
     NUM        = 'num'
     PRINT      = 'print'
     FLUM       = 'flum'
+    IF         = 'if'
+    WHILE      = 'while'
+    FUNCTION   = 'function'
+    PARAM1     = 'param1'
+    PARAM2     = 'param2'
+    PARAM3     = 'param3'
+    GIFT       = 'gift'
 
 @dataclass
 class Token:
@@ -40,6 +49,6 @@ class Token:
 
     def checkIfKeyword(tokenText):
         for kind in TokenType:
-            if kind.name.lower() == tokenText and kind.value in ['num', 'print', 'flum']:
+            if kind.name.lower() == tokenText and kind.value in ['num', 'print', 'flum', 'if', 'while', 'function', 'gift']: 
                 return kind
         return None

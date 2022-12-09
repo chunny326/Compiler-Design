@@ -10,6 +10,7 @@ class Lexer:
         self.line_count = 1
         self.offset_count = 0
         self.prev_token = ''
+        self.scope_level = 0
 
     def advance(self):
         try:
@@ -69,6 +70,24 @@ class Lexer:
                 self.advance()
                 self.prev_token = ')'
                 yield Token(TokenType.RPAREN)
+            elif self.cur_char == '{':
+                self.advance()
+                self.prev_token = '{'
+
+                # new scope has been added
+                self.scope_level += 1
+
+                yield Token(TokenType.LBRACE)
+            elif self.cur_char == '}':
+                self.advance()
+                self.prev_token = '}'
+                
+                # one level of scope has been closed
+                self.scope_level -= 1
+                if self.scope_level < 0:
+                    print("ERROR Line ", self.line_count, ": } used without {",  sep = "")
+
+                yield Token(TokenType.RBRACE)
             elif self.cur_char == '"':
                 self.advance()
                 self.prev_token = '"'
@@ -77,7 +96,6 @@ class Lexer:
             elif self.cur_char == ',':
                 self.advance()
                 self.prev_token = ','
-                print("ERROR Line ", self.line_count, ": Invalid token: ", self.prev_token,  sep = "")
                 yield Token(TokenType.COMMA)
             elif self.cur_char == '!':
                 self.advance()
@@ -101,6 +119,10 @@ class Lexer:
                     self.advance()
                 self.advance()
         
+        # check if number of { } match at the end of processing the file
+        if self.scope_level != 0:
+            print("ERROR: Number of opening { and closing } are not equal",  sep = "")
+
         yield Token(TokenType.EOF)
 
     def gen_alpha(self, sym_table):
@@ -121,17 +143,18 @@ class Lexer:
         if keyword == None:
             # found an Identifier, check if variable has a type or is being redeclared
             if self.prev_token == 'num':
-                # check if already in symbol table
-                if alpha_str not in sym_table:
-                    sym_table[alpha_str] = ('num', self.offset_count * 8 )
+                # check if not already in symbol table OR
+                # variable is in symbol table, check if variable being declared in new scope
+                if alpha_str not in sym_table or self.scope_level != sym_table[alpha_str][2]:
+                    sym_table[alpha_str] = ('num', self.offset_count * 8, self.scope_level)
                     self.offset_count += 1
                 # reject if being declared again
                 else:
                     print("ERROR Line ", self.line_count, ": Symbol table - Redeclaration of: ", alpha_str, sep = "")
             elif self.prev_token == 'flum':
                 # check if already in symbol table
-                if alpha_str not in sym_table:
-                    sym_table[alpha_str] = ('flum', self.offset_count * 8)
+                if alpha_str not in sym_table or self.scope_level != sym_table[alpha_str][2]:
+                    sym_table[alpha_str] = ('flum', self.offset_count * 8, self.scope_level)
                     self.offset_count += 1
                 # reject if being declared again
                 else:

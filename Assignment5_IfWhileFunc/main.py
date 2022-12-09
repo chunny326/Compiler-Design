@@ -23,10 +23,20 @@ if __name__ == "__main__":
 
     # productions to handle input language
     productions = Grammar('Goal->Statement',
-                          'Statement->Decl Assign',
+                          'Statement->type Decl',
                           'Statement->name Assign',
-                          'Statement->print ( name )',
-                          'Decl->type name',
+                          'Statement->print ( Expr )',
+                          'Statement->Branch',
+                          'Statement->gift Expr',
+                          'Branch->if ( Expr ) {',
+                          'Branch->while ( Expr ) {',
+                          'Branch->}',
+                          'Branch->function name ( ) {',
+                          'FuncParam->Expr FuncParam\'',
+                          'FuncParam->eps',
+                          'FuncParam\'->, Expr FuncParam\'',
+                          'FuncParam\'->eps',
+                          'Decl->name Assign',
                           'Assign->= Expr',
                           'Assign->eps',
                           'Expr->Term Expr\'',
@@ -41,10 +51,13 @@ if __name__ == "__main__":
                           'Power->^ Base Power',
                           'Power->eps',
                           'Base->( Expr )',
-                          'Base->Base\'',
+                          'Base->number',
+                          'Base->name FuncCall',
                           'Base->- Base\'',
                           'Base\'->number',
-                          'Base\'->name'
+                          'Base\'->name FuncCall',
+                          'FuncCall->( FuncParam )',
+                          'FuncCall->eps'
                          )
 
     # find the sets and table
@@ -56,7 +69,7 @@ if __name__ == "__main__":
 
     # ---------------------------- PROCESS VALID INPUT FILE --------------------S--------
     # read in valid lines file from book
-    with open('Notes/accept.txt', 'r') as file:
+    with open('Notes/accept-6000.txt', 'r') as file:
         text = file.read()
 
     # tokenize file
@@ -86,32 +99,7 @@ if __name__ == "__main__":
         nasm.init_file()
         nasm.convert_post_order(post_order, symbol_table)
         nasm.finish_file()
-
-    print('NASM assembly file created and ready to execute.\n')
+        print('NASM assembly file created and ready to execute.\n')
+    
     print("\nEnd of file. Done processing.\n")
     # -------------------------------------------------------------------------------------
-
-    # ------------------------------ PROCESS INVALID INPUT FILE ------------------------------
-    # read in valid lines file from book
-    with open('Notes/reject.txt', 'r') as file1:
-        text1 = file1.read()
-
-    # tokenize file
-    symbol_table3 = {}
-    lexer1 = Lexer(text1)
-    print("\n\nScanning ", file1.name, "...", sep = "")
-    tokens1 = lexer1.gen_tokens(symbol_table3)
-
-    parse1 = Parser(tokens1, False)
-    print("\nParsing ", file1.name, "...\n", sep = "")
-    parse_results1 = parse1.skeleton_parser(table, productions)
-
-    # get another copy of the set of tokens from file to pass to Shunting Yard algorithm
-    symbol_table4 = {}
-    lexer2 = Lexer(text1)
-    tokens2 = lexer2.gen_tokens(symbol_table4)
-    toks1 = list(tokens2)
-
-    print("\nEnd of file. Done processing.\n")
-    # ----------------------------------------------------------------------------------
-

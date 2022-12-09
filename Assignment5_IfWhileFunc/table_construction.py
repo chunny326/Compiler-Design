@@ -28,7 +28,7 @@ def find_first(grammar):
                     i = 0
                     k = len(expression)
 
-                    while ('eps' in expression[i] and i <= k - 1):
+                    while ('eps' in first[expression[i]] and i <= k - 1):
                         union(rhs, expression[i + 1].remove('eps'))
                         i = i + 1
 
