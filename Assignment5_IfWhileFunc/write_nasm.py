@@ -4,6 +4,9 @@ class File():
         self.type_flag = ''
         self.temp_var_counter = 1
         self.stack_offset = 0
+        self.label_counter = 0
+        self.scope_names = []
+        self.scope_level = 0
 
     def init_file(self):
         self.f.writelines([
@@ -164,32 +167,55 @@ class File():
                             '\t\tmovsd   ' + offset + ', xmm0             ; Push variable onto stack\n'
                            ])
 
+    def if_compare(self, val, if_name):
+        self.f.writelines([
+                            '\t\tcmp     ' + val + ', 0      ; Compare value to 0\n',
+                            '\t\tjz      ' + if_name + '                    ; Skip if statement if 0\n'
+                           ])
+
+    def while_compare(self, val, while_name):
+        self.f.writelines([
+                            while_name + ':                                ; Beginning of while loop\n'
+                            '\t\tjz      ' + if_name + '                    ; Skip if statement if 0\n'
+                           ])
+
+    def scope_done(self, scope_name):
+        self.f.writelines([
+                            scope_name + ':                                   ; End of if statement\n'
+                           ])
+
     def check_stack_top(self, top, symbol_table):
-        if isinstance(top, int) or isinstance(top, float):
+        if isinstance(top[0], int) or isinstance(top[0], float):
             self.type_flag = 'number'
-            return top
+            return top[0]
         else:
             self.type_flag = 'variable'
-            offset = 'qword[rsp + ' + str(symbol_table[top][1]) + ']'
-            return offset, symbol_table[top]
+            if len(symbol_table[top[0]]) - 1 >= top[1]:
+                offset = 'qword[rsp + ' + str(symbol_table[top[0]][top[1]][0][1]) + ']'
+                top_ret = symbol_table[top[0]][top[1]]
+            # deeper scope is set, but variable is from higher scope level
+            else:
+                offset = 'qword[rsp + ' + str(symbol_table[top[0]][top[1] - 1][0][1]) + ']'
+                top_ret = symbol_table[top[0]][top[1] - 1]
+            return offset, top_ret
 
     def convert_post_order(self, post_order, symbol_table):
-        operators = ['+', '-', '*', '/', '^', '-u', '=', 'print']
+        operators = ['+', '-', '*', '/', '^', '-u', '=', 'print', 'if', 'while']
 
         for tree in post_order:
             first, *_, last = symbol_table.values()
             # find where to add temporary variables to the stack ()
-            self.stack_offset = last[1]
+            self.stack_offset = last[-1][0][1]
 
             # stack to help process post-order tree
             stack = []
             
             # process each line of the file
             for node in tree:
-                if node in operators:
+                if node[0] in operators:
                     top1 = self.check_stack_top(stack.pop(), symbol_table)
                     
-                    if node == 'print':
+                    if node[0] == 'print':
                         # check if constant value from stack
                         if self.type_flag == 'number':
                             num1 = top1
@@ -197,12 +223,38 @@ class File():
                         elif self.type_flag == 'variable':
                             num1 = top1[0]
 
-                        if isinstance(top1, int) or (isinstance(top1, tuple) and top1[1][0] == 'num'):
+                        if isinstance(top1, int) or isinstance(top1[0], int) or (isinstance(top1, tuple) and top1[1][0][0] == 'num'):
                             self.print_int(num1)
-                        elif isinstance(top2, float) or (isinstance(top1, tuple) and top1[1][0] == 'flum'):
+                        elif isinstance(top2, float) or isinstance(top2[0], float) or (isinstance(top1, tuple) and top1[1][0][0] == 'flum'):
                             self.print_float(num1)
+                    
+                    elif node[0] == 'if':
+                        # check if constant value from stack
+                        if self.type_flag == 'number':
+                            num1 = top1
+                        # check if variable that needs to pulled from symbol table
+                        elif self.type_flag == 'variable':
+                            num1 = top1[0]
                         
-                    elif node == '-u':
+                        # add new label to scope stack, write nasm to evaluate if statement
+                        self.scope_names.append("if" + str(self.label_counter)) 
+                        self.if_compare(num1, self.scope_names[-1])
+                        self.label_counter += 1
+                    
+                    elif node[0] == 'while':
+                        # check if constant value from stack
+                        if self.type_flag == 'number':
+                            num1 = top1
+                        # check if variable that needs to pulled from symbol table
+                        elif self.type_flag == 'variable':
+                            num1 = top1[0]
+                        
+                        # add new label to scope stack, write nasm to evaluate if statement
+                        self.scope_names.append("while" + str(self.label_counter)) 
+                        self.while_compare(num1, self.scope_names[-1])
+                        self.label_counter += 1
+
+                    elif node[0] == '-u':
                         # check if constant value from stack
                         if self.type_flag == 'number':
                             num1 = top1
@@ -211,10 +263,10 @@ class File():
                             num1 = top1[0]
 
                         # perform unary operation
-                        if isinstance(top1, int) or (isinstance(top1, tuple) and top1[1][0] == 'num'):
+                        if isinstance(top1, int) or isinstance(top1[0], int) or (isinstance(top1, tuple) and top1[1][0][0] == 'num'):
                             self.int_multiplication(num1, -1)
                             op = 'num'
-                        elif isinstance(top2, float) or (isinstance(top1, tuple) and top1[1][0] == 'flum'):
+                        elif isinstance(top2, float) or isinstance(top2[0], float) or (isinstance(top1, tuple) and top1[1][0][0] == 'flum'):
                             self.float_multiplication(num1, -1)
                             op = 'flum'
 
@@ -225,28 +277,28 @@ class File():
                         elif op == 'flum':
                             self.add_flum_result_to_stack('qword[rsp + ' + str(self.stack_offset) + ']')
                         temp = 'temp' + str(self.temp_var_counter)
-                        symbol_table[temp] = (op, self.stack_offset)
-                        stack.append(temp)
+                        symbol_table[temp] = [[(op, self.stack_offset, 0, 0)]]
+                        stack.append((temp, 0))
                         self.temp_var_counter += 1
 
-                    elif node == '=':
+                    elif node[0] == '=':
                         # get variable from symbol table
                         top2 = self.check_stack_top(stack.pop(), symbol_table)
 
                         # perform int operation
-                        if top2[1][0] == 'num':
+                        if top2[1][0][0] == 'num':
                             if isinstance(top1, int):
                                 self.int_variable_assign(top2[0], top1)
                             else:
                                 self.int_variable_assign_variable(top2[0], top1[0])
                         # perform floating-point operation
-                        elif top2[1][0] == 'flum':
+                        elif top2[1][0][0] == 'flum':
                             if isinstance(top1, float):
                                 self.float_variable_assign(top2[0], top1)
                             else:
                                 self.float_variable_assign_var(top2[0], top1[0])
 
-                    elif node == '+':
+                    elif node[0] == '+':
                         # check if constant value from stack
                         if self.type_flag == 'number':
                             num1 = top1
@@ -265,13 +317,13 @@ class File():
                             num2 = top2[0]
                         
                         # perform addition
-                        if isinstance(top1, int) or (isinstance(top1, tuple) and top1[1][0] == 'num'):
-                            if isinstance(top2, int) or \
-                              (isinstance(top2, tuple) and top2[1][0] == 'num'):
+                        if isinstance(top1, int) or isinstance(top1[0], int) or (isinstance(top1, tuple) and top1[1][0][0] == 'num'):
+                            if isinstance(top2, int) or isinstance(top2[0], int) or \
+                              (isinstance(top2, tuple) and top2[1][0][0] == 'num'):
                                 self.int_addition(num2, num1)
                                 op = 'num'
-                        elif isinstance(top2, float) or (isinstance(top1, tuple) and top1[1][0] == 'flum') or \
-                             isinstance(top2, float) or (isinstance(top2, tuple) and top2[1][0] == 'flum'):
+                        elif isinstance(top2, float) or isinstance(top2[0], float) or (isinstance(top1, tuple) and top1[1][0][0] == 'flum') or \
+                             isinstance(top2, float) or isinstance(top2[0], float) or (isinstance(top2, tuple) and top2[1][0][0] == 'flum'):
                             self.float_addition(num2, num1)
                             op = 'flum'
 
@@ -282,11 +334,11 @@ class File():
                         elif op == 'flum':
                             self.add_flum_result_to_stack('qword[rsp + ' + str(self.stack_offset) + ']')
                         temp = 'temp' + str(self.temp_var_counter)
-                        symbol_table[temp] = (op, self.stack_offset)
-                        stack.append(temp)
+                        symbol_table[temp] = [[(op, self.stack_offset, 0, 0)]]
+                        stack.append((temp, 0))
                         self.temp_var_counter += 1
 
-                    elif node == '-':
+                    elif node[0] == '-':
                         # check if constant value from stack
                         if self.type_flag == 'number':
                             num1 = top1
@@ -305,9 +357,9 @@ class File():
                             num2 = top2[0]
                         
                         # perform subtraction
-                        if isinstance(top1, int) or (isinstance(top1, tuple) and top1[1][0] == 'num'):
-                            if isinstance(top2, int) or \
-                              (isinstance(top2, tuple) and top2[1][0] == 'num'):
+                        if isinstance(top1, int) or isinstance(top1[0], int) or (isinstance(top1, tuple) and top1[1][0][0] == 'num'):
+                            if isinstance(top2, int) or isinstance(top2[0], int) or \
+                              (isinstance(top2, tuple) and top2[1][0][0] == 'num'):
                                 self.subtraction(num2, num1)
                                 op = 'num'
 
@@ -318,11 +370,11 @@ class File():
                         elif op == 'flum':
                             self.add_flum_result_to_stack('qword[rsp + ' + str(self.stack_offset) + ']')
                         temp = 'temp' + str(self.temp_var_counter)
-                        symbol_table[temp] = (op, self.stack_offset)
-                        stack.append(temp)
+                        symbol_table[temp] = [[(op, self.stack_offset, 0, 0)]]
+                        stack.append((temp, 0))
                         self.temp_var_counter += 1
 
-                    elif node == '*':
+                    elif node[0] == '*':
                         # check if constant value from stack
                         if self.type_flag == 'number':
                             num1 = top1
@@ -341,13 +393,13 @@ class File():
                             num2 = top2[0]
                         
                         # perform multiplication
-                        if isinstance(top1, int) or (isinstance(top1, tuple) and top1[1][0] == 'num'):
-                            if isinstance(top2, int) or \
-                              (isinstance(top2, tuple) and top2[1][0] == 'num'):
+                        if isinstance(top1, int) or isinstance(top1[0], int) or (isinstance(top1, tuple) and top1[1][0][0] == 'num'):
+                            if isinstance(top2, int) or isinstance(top2[0], int) or \
+                              (isinstance(top2, tuple) and top2[1][0][0] == 'num'):
                                 self.int_multiplication(num2, num1)
                                 op = 'num'
-                        elif isinstance(top2, float) or (isinstance(top1, tuple) and top1[1][0] == 'flum') or \
-                             isinstance(top2, float) or (isinstance(top2, tuple) and top2[1][0] == 'flum'):
+                        elif isinstance(top2, float) or isinstance(top2[0], float) or (isinstance(top1, tuple) and top1[1][0][0] == 'flum') or \
+                             isinstance(top2, float) or isinstance(top2[0], float) or (isinstance(top2, tuple) and top2[1][0][0] == 'flum'):
                             self.float_multiplication(num2, num1)
                             op = 'flum'
 
@@ -358,11 +410,11 @@ class File():
                         elif op == 'flum':
                             self.add_flum_result_to_stack('qword[rsp + ' + str(self.stack_offset) + ']')
                         temp = 'temp' + str(self.temp_var_counter)
-                        symbol_table[temp] = (op, self.stack_offset)
-                        stack.append(temp)
+                        symbol_table[temp] = [[(op, self.stack_offset, 0, 0)]]
+                        stack.append((temp, 0))
                         self.temp_var_counter += 1
 
-                    elif node == '/':
+                    elif node[0] == '/':
                          # check if constant value from stack
                         if self.type_flag == 'number':
                             num1 = top1
@@ -381,13 +433,13 @@ class File():
                             num2 = top2[0]
                         
                         # perform division
-                        if isinstance(top1, int) or (isinstance(top1, tuple) and top1[1][0] == 'num'):
-                            if isinstance(top2, int) or \
-                              (isinstance(top2, tuple) and top2[1][0] == 'num'):
+                        if isinstance(top1, int) or isinstance(top1[0], int) or (isinstance(top1, tuple) and top1[1][0][0] == 'num'):
+                            if isinstance(top2, int) or isinstance(top2[0], int) or \
+                              (isinstance(top2, tuple) and top2[1][0][0] == 'num'):
                                 self.division(num2, num1)
                                 op = 'num'
-                        elif isinstance(top2, float) or (isinstance(top1, tuple) and top1[1][0] == 'flum') or \
-                             isinstance(top2, float) or (isinstance(top2, tuple) and top2[1][0] == 'flum'):
+                        elif isinstance(top2, float) or isinstance(top2[0], float) or (isinstance(top1, tuple) and top1[1][0][0] == 'flum') or \
+                             isinstance(top2, float) or isinstance(top2[0], float) or (isinstance(top2, tuple) and top2[1][0][0] == 'flum'):
                             self.float_division(num2, num1)
                             op = 'flum'
 
@@ -398,10 +450,19 @@ class File():
                         elif op == 'flum':
                             self.add_flum_result_to_stack('qword[rsp + ' + str(self.stack_offset) + ']')
                         temp = 'temp' + str(self.temp_var_counter)
-                        symbol_table[temp] = (op, self.stack_offset)
-                        stack.append(temp)
+                        symbol_table[temp] = [[(op, self.stack_offset, 0, 0)]]
+                        stack.append((temp, 0))
                         self.temp_var_counter += 1
-
+                
+                elif node[0] == '}':
+                    # if, while, or function scope has ended
+                    self.scope_done(self.scope_names.pop())
+                    self.scope_level -= 1
+                
+                elif node[0] == '{':
+                    self.scope_level += 1
+                        
+                # add everything else (numbers and variables) directly to the stack
                 else:                
                     stack.append(node)
                 

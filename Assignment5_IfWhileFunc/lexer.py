@@ -146,25 +146,33 @@ class Lexer:
             if self.prev_token == 'num':
                 # check if not already in symbol table OR
                 # variable is in symbol table, check if variable being declared in new scope
-                if alpha_str not in sym_table or self.scope_level != sym_table[alpha_str][2] or self.inside_func != '':
-                    sym_table[alpha_str] = ('num', self.offset_count * 8, self.scope_level, self.line_count)
+                if alpha_str not in sym_table or self.inside_func != '':
+                    sym_table[alpha_str] = [[('num', self.offset_count * 8, self.scope_level, self.line_count)]]
+                    self.offset_count += 1
+                elif self.scope_level == len(sym_table[alpha_str]):
+                    sym_table[alpha_str].append([('num', self.offset_count * 8, self.scope_level, self.line_count)])
                     self.offset_count += 1
                 # reject if being declared again
                 else:
                     print("ERROR Line ", self.line_count, ": Symbol table - Redeclaration of: ", alpha_str, sep = "")
             elif self.prev_token == 'flum':
                 # check if already in symbol table
-                if alpha_str not in sym_table or self.scope_level != sym_table[alpha_str][2]:
-                    sym_table[alpha_str] = ('flum', self.offset_count * 8, self.scope_level, self.line_count)
+                if alpha_str not in sym_table or self.inside_func != '':
+                    sym_table[alpha_str] = [('flum', self.offset_count * 8, self.scope_level, self.line_count)]
                     self.offset_count += 1
-                # reject if being declared again
+                elif self.scope_level == len(sym_table[alpha_str]):
+                    sym_table[alpha_str].append([('flum', self.offset_count * 8, self.scope_level, self.line_count)])
+                    self.offset_count += 1
                 else:
                     print("ERROR Line ", self.line_count, ": Symbol table - Redeclaration of: ", alpha_str, sep = "")
             elif self.prev_token == 'function':
                 # check if not already in symbol table
                 if alpha_str not in sym_table:
                     self.inside_func = alpha_str
-                    sym_table[alpha_str] = ('function', self.line_count)
+                    if alpha_str not in sym_table:
+                        sym_table[alpha_str] = [('function', self.line_count)]
+                    else:
+                        sym_table[alpha_str].append([('function', self.line_count)])
                 # reject if being declared again
                 else:
                     print("ERROR Line ", self.line_count, ": Symbol table - Redeclaration of: ", alpha_str, sep = "")
@@ -174,7 +182,7 @@ class Lexer:
                 if alpha_str not in sym_table:
                     print("ERROR Line ", self.line_count, ": Variable never declared: ", alpha_str, sep = "")
             self.prev_token = 'var'
-            return Token(TokenType.IDENTIFIER, alpha_str)
+            return Token(TokenType.IDENTIFIER, alpha_str, self.scope_level)
         else:
             self.prev_token = keyword.value
             # function scope is now ended because nothing can occur after gift

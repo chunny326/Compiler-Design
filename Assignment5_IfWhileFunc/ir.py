@@ -9,7 +9,7 @@ operator_prec = {
     'DIV':    2,
     'PLUS':   3,
     'MINUS':  3,
-    'EQ':     4
+    'EQ':     4,
 }
 
 def higher_precedence(op1, op2):
@@ -101,7 +101,7 @@ def shunting_yard(tokens):
             
             elif tok.type.value == 'name' or tok.type.value == 'number': 
                 # add token to back of queue if it is a value or variable
-                line_queue.append(tok.value)
+                line_queue.append((tok.value, tok.scope))
                 prev_tok = '#'
             
             elif tok.type.name in operator_prec.keys():
@@ -113,13 +113,14 @@ def shunting_yard(tokens):
                 
                 top = peek_ops(op_stack)
                 while top is not None and top.type.value not in "()" and higher_precedence(top, tok):
-                    line_queue.append(op_stack.pop().type.value)
+                    temp = op_stack.pop()
+                    line_queue.append((temp.type.value, temp.scope))
                     top = peek_ops(op_stack)
                 
                 prev_tok = 'op'
                 op_stack.append(tok)
             
-            elif tok.type.value in ['print', 'function', 'if', 'while', 'gift']:
+            elif tok.type.value in ['print', 'function', 'if', 'while', 'gift', '}', '{']:
                 op_stack.append(tok)
                 prev_tok = 'func'
 
@@ -135,7 +136,8 @@ def shunting_yard(tokens):
                 
                 # go until opening parens is found
                 while top is not None and top.type.value != '(':
-                    line_queue.append(op_stack.pop().type.value)
+                    temp = op_stack.pop()
+                    line_queue.append((temp.type.value, temp.scope))
                     top = peek_ops(op_stack)
                 
                 # discard '(' as it is not used in post-fix notation
@@ -146,7 +148,8 @@ def shunting_yard(tokens):
         else:
             while peek_ops(op_stack) is not None:
                 # add remaining operators on stack to output
-                line_queue.append(op_stack.pop().type.value)
+                temp = op_stack.pop()
+                line_queue.append((temp.type.value, temp.scope))
             out_queue.append(line_queue)
             line_queue = []
             prev_tok = 'f'

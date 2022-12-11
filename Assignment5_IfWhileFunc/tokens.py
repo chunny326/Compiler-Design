@@ -43,9 +43,10 @@ class TokenType(Enum):
 class Token:
     type: TokenType
     value: any = None
+    scope: int = 0
 
     def __repr__(self):
-        return self.type.name + (f":{self.value}" if self.value != None else "")
+        return self.type.name + (f":{self.value}" if self.value != None else "") + self.scope
 
     def checkIfKeyword(tokenText):
         for kind in TokenType:

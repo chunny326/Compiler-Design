@@ -168,99 +168,9 @@ if ( varIf2 ) {
   print(varIf2)
 }
 
-
 num varScope = 1
 if ( varScope ) {
   num varScope = 666
   print(varScope)
 } 
 print(varScope)
-
-
-num varWhile = 10
-while( var2 ) {
-  var2 = var2 - 1
-}
-
-num varNested1 = 4
-num varNested2 = 5
-
-while ( varNested1 ) {
-  while ( varNested2 ) {
-    print (varNested2)
-    varNested2  = varNested2 - 1
-  }
-  print(varNested1)
-  varNested1 = varNested1 - 1
-}
-
-varNested1 = 3
-varNested2 = 3
-num varNested3
-num varNested4
-num sumWhile = 0
-
-while ( varNested1 ) {
-  varNested2 = 3
-  while ( varNested2 ) {
-    varNested3 = 3
-    while ( varNested3 ) {
-      varNested4 = 3
-      while ( varNested4 ) {
-        if ( varNested1 ) {
-          sumWhile = sumWhile + 1
-        }
-        varNested4 = varNested4 - 1
-      }
-      varNested3 = varNested3 - 1
-    }
-    varNested2 = varNested2 - 1
-  }
-  varNested1 = varNested1 - 1
-}
-
-print(sumWhile)
-
-
-function myFunction() {
-   num func1 = 1234 
-   gift func1
-}
-
-num varResult = 0
-varResult = myFunction()
-print(varResult)
-
-function myAddingFunction() {
-  num returnValue = param1 + param2 + param3
-  gift returnValue  
-}
-
-num varPresent = 0
-varPresent = myAddingFunction(100, 200, 300)
-print(varPresent)
-
-function approxCircleArea() {
-  num returnValue = 0
-  returnValue = 314 * param1 * param1 / 100
-  gift returnValue
-}
-
-num approxArea = 0
-approxArea = approxCircleArea(50)
-print(approxArea)
-
-function cylinderVolume() {
-  num returnValue = 0
-  returnValue = param1 * param2
-  gift returnValue
-}
-
-num cylinderBaseArea = 114
-num cylinderHeight = 100
-num volume = 0
-volume = cylinderVolume(cylinderBaseArea, cylinderHeight)
-print(volume)
-
-volume = cylinderVolume(approxCircleArea(33), 44)
-print(volume)
