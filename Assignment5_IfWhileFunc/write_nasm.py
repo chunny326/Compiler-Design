@@ -170,18 +170,25 @@ class File():
     def if_compare(self, val, if_name):
         self.f.writelines([
                             '\t\tcmp     ' + val + ', 0      ; Compare value to 0\n',
-                            '\t\tjz      ' + if_name + '                    ; Skip if statement if 0\n'
+                            '\t\tjz      ' + if_name + 'done                    ; Skip if statement if 0\n'
                            ])
 
     def while_compare(self, val, while_name):
         self.f.writelines([
-                            while_name + ':                                ; Beginning of while loop\n'
-                            '\t\tjz      ' + if_name + '                    ; Skip if statement if 0\n'
+                            while_name + ':                                ; Beginning of while loop\n',
+                            '\t\tcmp     ' + val + ', 0      ; Compare value to 0\n',
+                            '\t\tjz      ' + while_name + 'done                    ; Skip if statement if 0\n'
                            ])
 
-    def scope_done(self, scope_name):
+    def if_scope_done(self, scope_name):
         self.f.writelines([
-                            scope_name + ':                                   ; End of if statement\n'
+                            scope_name + 'done:                                   ; End of if statement\n'
+                           ])
+
+    def while_scope_done(self, scope_name):
+        self.f.writelines([
+                            '\t\tjmp    ' + scope_name + '                    ; Skip if statement if 0\n',
+                            scope_name + 'done:                                   ; End of if statement\n'
                            ])
 
     def check_stack_top(self, top, symbol_table):
@@ -195,8 +202,16 @@ class File():
                 top_ret = symbol_table[top[0]][top[1]]
             # deeper scope is set, but variable is from higher scope level
             else:
-                offset = 'qword[rsp + ' + str(symbol_table[top[0]][top[1] - 1][0][1]) + ']'
-                top_ret = symbol_table[top[0]][top[1] - 1]
+                find_var = top[1]
+                while True:
+                    try:
+                        offset = 'qword[rsp + ' + str(symbol_table[top[0]][find_var][0][1]) + ']'
+                        top_ret = symbol_table[top[0]][find_var]
+                        break
+                    except IndexError:
+                        find_var -= 1
+                        continue
+
             return offset, top_ret
 
     def convert_post_order(self, post_order, symbol_table):
@@ -240,6 +255,7 @@ class File():
                         self.scope_names.append("if" + str(self.label_counter)) 
                         self.if_compare(num1, self.scope_names[-1])
                         self.label_counter += 1
+                        self.scope_level += 1
                     
                     elif node[0] == 'while':
                         # check if constant value from stack
@@ -253,6 +269,7 @@ class File():
                         self.scope_names.append("while" + str(self.label_counter)) 
                         self.while_compare(num1, self.scope_names[-1])
                         self.label_counter += 1
+                        self.scope_level += 1
 
                     elif node[0] == '-u':
                         # check if constant value from stack
@@ -456,11 +473,15 @@ class File():
                 
                 elif node[0] == '}':
                     # if, while, or function scope has ended
-                    self.scope_done(self.scope_names.pop())
+                    label = self.scope_names.pop()
+                    if 'while' in label:
+                        self.while_scope_done(label)
+                    elif 'if' in label:
+                        self.if_scope_done(label)
                     self.scope_level -= 1
                 
                 elif node[0] == '{':
-                    self.scope_level += 1
+                    pass
                         
                 # add everything else (numbers and variables) directly to the stack
                 else:                

@@ -221,7 +221,6 @@ while ( varNested1 ) {
 
 print(sumWhile)
 
-
 function myFunction() {
    num func1 = 1234 
    gift func1
