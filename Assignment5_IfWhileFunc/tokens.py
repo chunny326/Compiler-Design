@@ -26,6 +26,7 @@ class TokenType(Enum):
     COMMA      = ','
     EXCLAME    = '!'
     BACKSLASH  = '\\'
+    FUNCNAME   = 'func_name'
 
     # keywords
     NUM        = 'num'

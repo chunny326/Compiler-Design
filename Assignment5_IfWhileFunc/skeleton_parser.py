@@ -60,7 +60,7 @@ class Parser:
                 # check for specific types to match with production names
                 if word.type.name in ['NUM', 'FLUM']:
                     word_type = 'dtype'
-                elif word.type.name in ['IDENTIFIER']:
+                elif word.type.name in ['IDENTIFIER', 'FUNCNAME']:
                     word_type = 'name'
                 elif word.type.name in ['PRINT', 'IF', 'WHILE', 'FUNCTION', 'GIFT']:
                     word_type = word.type.name.lower()

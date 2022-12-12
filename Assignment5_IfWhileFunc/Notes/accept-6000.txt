@@ -220,3 +220,43 @@ while ( varNested1 ) {
 }
 
 print(sumWhile)
+
+function myFunction() {
+   num func1 = 1234 
+   gift func1
+}
+
+num varResult = 0
+varResult = myFunction()
+print(varResult)
+
+function myAddingFunction() {
+  num returnValue = param1 + param2 + param3
+  gift returnValue  
+}
+
+num varPresent = 0
+varPresent = myAddingFunction(100, 200, 300)
+print(varPresent)
+
+function approxCircleArea() {
+  num returnValue = 0
+  returnValue = 314 * param1 * param1 / 100
+  gift returnValue
+}
+
+num approxArea = 0
+approxArea = approxCircleArea(50)
+print(approxArea)
+
+function cylinderVolume() {
+  num returnValue = 0
+  returnValue = param1 * param2
+  gift returnValue
+}
+
+num cylinderBaseArea = 114
+num cylinderHeight = 100
+num volume = 0
+volume = cylinderVolume(cylinderBaseArea, cylinderHeight)
+print(volume)

@@ -103,6 +103,16 @@ def shunting_yard(tokens):
                 # add token to back of queue if it is a value or variable
                 line_queue.append((tok.value, tok.scope))
                 prev_tok = '#'
+
+            elif tok.type.value == 'func_name':
+                # treat function name as an oeprator
+                op_stack.append(tok)
+                prev_tok = 'func'
+
+            elif tok.type.value in ['param1', 'param2', 'param3']:
+                # add parameters to back of queue
+                line_queue.append((tok.type.value, tok.scope))
+                prev_tok = '#'
             
             elif tok.type.name in operator_prec.keys():
                 # if token is an operator, one-by-one remove all operators
@@ -120,7 +130,7 @@ def shunting_yard(tokens):
                 prev_tok = 'op'
                 op_stack.append(tok)
             
-            elif tok.type.value in ['print', 'function', 'if', 'while', 'gift', '}', '{']:
+            elif tok.type.value in ['print', 'if', 'while', 'gift', '}', '{']:
                 op_stack.append(tok)
                 prev_tok = 'func'
 
@@ -149,7 +159,10 @@ def shunting_yard(tokens):
             while peek_ops(op_stack) is not None:
                 # add remaining operators on stack to output
                 temp = op_stack.pop()
-                line_queue.append((temp.type.value, temp.scope))
+                if temp.type.value == 'func_name':
+                    line_queue.append((temp.value, temp.scope))
+                else:
+                    line_queue.append((temp.type.value, temp.scope))
             out_queue.append(line_queue)
             line_queue = []
             prev_tok = 'f'

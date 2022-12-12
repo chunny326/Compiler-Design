@@ -169,13 +169,14 @@ class Lexer:
                 # check if not already in symbol table
                 if alpha_str not in sym_table:
                     self.inside_func = alpha_str
-                    if alpha_str not in sym_table:
-                        sym_table[alpha_str] = [('function', self.line_count)]
-                    else:
-                        sym_table[alpha_str].append([('function', self.line_count)])
-                # reject if being declared again
+                    sym_table[alpha_str] = [('function', self.line_count)]
+                # reject if function being declared again
                 else:
                     print("ERROR Line ", self.line_count, ": Symbol table - Redeclaration of: ", alpha_str, sep = "")
+                return Token(TokenType.FUNCNAME, alpha_str)
+            # function is being called
+            elif alpha_str in sym_table and sym_table[alpha_str][0][0] == 'function':
+                return Token(TokenType.FUNCNAME, alpha_str)
             else:
                 # variable is not preceded by a type
                 # check if variable already in symbol table to see if this is valid
