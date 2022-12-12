@@ -1,0 +1,16 @@
+
+Processing grammar sets...
+
+Scanning Notes/accept-6000.txt...
+
+Parsing Notes/accept-6000.txt...
+
+Running Shunting Yard algorithm to create post-order traversal...
+
+Shunting Yard algorithm done processing.
+
+NASM assembly file created and ready to execute.
+
+
+End of file. Done processing.
+
