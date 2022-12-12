@@ -134,6 +134,12 @@ def shunting_yard(tokens):
                 op_stack.append(tok)
                 prev_tok = 'func'
 
+            # check if function call within function call
+            elif tok.type.value == ',':
+                if prev_tok == ')':
+                    temp = op_stack.pop()
+                    line_queue.append((temp.value, temp.scope))
+
             # opening parens behaves like beginning of an expression
             elif tok.type.value == '(':
                 op_stack.append(tok)
