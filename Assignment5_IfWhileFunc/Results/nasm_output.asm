@@ -1124,16 +1124,18 @@ while6Done:                                   ; End of if statement
 
 		jmp    myFunctionDone                     ; Skip over function definition
 myFunction:                                ; Beginning of function call
-
+		push    rbp                     ; Avoid stack alignment isses
+		mov     rbp, rsp
 		mov     qword[rsp + 744], 1234        ; Push variable onto stack
 		mov     rax, 1234     ; return value stored in rax
 
-		jmp     myFunctionCallDone
+		mov     rsp, rbp
+		pop     rbp                     ; Avoid stack alignment issues
+		ret
 
 myFunctionDone:                                ; End of function call
 		mov     qword[rsp + 752], 0        ; Push variable onto stack
-		jmp     myFunction                  ; call function
-myFunctionCallDone:                                ; End of function call
+		call    myFunction                  ; call function
 		mov     qword[rsp + 824], rax     ; Push variable onto stack
 		mov     rax, qword[rsp + 824]
 		mov     qword[rsp + 752], rax            ; Push variable onto stack
@@ -1142,28 +1144,33 @@ myFunctionCallDone:                                ; End of function call
 
 		jmp    myAddingFunctionDone                     ; Skip over function definition
 myAddingFunction:                                ; Beginning of function call
-
-		mov     rax, qword[rsp + 880]       ; 64 bit value loading of data values only through rax
-		mov     rbx, qword[rsp + 888]
+		push    rbp                     ; Avoid stack alignment isses
+		mov     rbp, rsp
+		mov     rax, r8       ; 64 bit value loading of data values only through rax
+		mov     rbx, r9
 		add     rax, rbx
 		mov     qword[rsp + 824], rax     ; Push variable onto stack
 		mov     rax, qword[rsp + 824]       ; 64 bit value loading of data values only through rax
-		mov     rbx, qword[rsp + 896]
+		mov     rbx, r10
 		add     rax, rbx
 		mov     qword[rsp + 832], rax     ; Push variable onto stack
 		mov     rax, qword[rsp + 832]
 		mov     qword[rsp + 792], rax            ; Push variable onto stack
 		mov     rax, qword[rsp + 832]     ; return value stored in rax
 
-		jmp     myAddingFunctionCallDone
+		mov     rsp, rbp
+		pop     rbp                     ; Avoid stack alignment issues
+		ret
 
 myAddingFunctionDone:                                ; End of function call
 		mov     qword[rsp + 768], 0        ; Push variable onto stack
 		mov     qword[rsp + 880], 300        ; Push variable onto stack
+		mov     r8, qword[rsp + 880]
 		mov     qword[rsp + 888], 200        ; Push variable onto stack
+		mov     r9, qword[rsp + 888]
 		mov     qword[rsp + 896], 100        ; Push variable onto stack
-		jmp     myAddingFunction                  ; call function
-myAddingFunctionCallDone:                                ; End of function call
+		mov     r10, qword[rsp + 896]
+		call    myAddingFunction                  ; call function
 		mov     qword[rsp + 824], rax     ; Push variable onto stack
 		mov     rax, qword[rsp + 824]
 		mov     qword[rsp + 768], rax            ; Push variable onto stack
@@ -1172,14 +1179,15 @@ myAddingFunctionCallDone:                                ; End of function call
 
 		jmp    approxCircleAreaDone                     ; Skip over function definition
 approxCircleArea:                                ; Beginning of function call
-
+		push    rbp                     ; Avoid stack alignment isses
+		mov     rbp, rsp
 		mov     qword[rsp + 792], 0        ; Push variable onto stack
 		mov     rax, 314       ; 64 bit value loading of data values only through rax
-		mov     rbx, qword[rsp + 880]
+		mov     rbx, r8
 		imul    rax, rbx
 		mov     qword[rsp + 824], rax     ; Push variable onto stack
 		mov     rax, qword[rsp + 824]       ; 64 bit value loading of data values only through rax
-		mov     rbx, qword[rsp + 880]
+		mov     rbx, r8
 		imul    rax, rbx
 		mov     qword[rsp + 832], rax     ; Push variable onto stack
 		mov     rax, qword[rsp + 832]
@@ -1191,13 +1199,15 @@ approxCircleArea:                                ; Beginning of function call
 		mov     qword[rsp + 792], rax            ; Push variable onto stack
 		mov     rax, qword[rsp + 840]     ; return value stored in rax
 
-		jmp     approxCircleAreaCallDone
+		mov     rsp, rbp
+		pop     rbp                     ; Avoid stack alignment issues
+		ret
 
 approxCircleAreaDone:                                ; End of function call
 		mov     qword[rsp + 784], 0        ; Push variable onto stack
 		mov     qword[rsp + 880], 50        ; Push variable onto stack
-		jmp     approxCircleArea                  ; call function
-approxCircleAreaCallDone:                                ; End of function call
+		mov     r8, qword[rsp + 880]
+		call    approxCircleArea                  ; call function
 		mov     qword[rsp + 824], rax     ; Push variable onto stack
 		mov     rax, qword[rsp + 824]
 		mov     qword[rsp + 784], rax            ; Push variable onto stack
@@ -1206,17 +1216,20 @@ approxCircleAreaCallDone:                                ; End of function call
 
 		jmp    cylinderVolumeDone                     ; Skip over function definition
 cylinderVolume:                                ; Beginning of function call
-
+		push    rbp                     ; Avoid stack alignment isses
+		mov     rbp, rsp
 		mov     qword[rsp + 792], 0        ; Push variable onto stack
-		mov     rax, qword[rsp + 880]       ; 64 bit value loading of data values only through rax
-		mov     rbx, qword[rsp + 888]
+		mov     rax, r8       ; 64 bit value loading of data values only through rax
+		mov     rbx, r9
 		imul    rax, rbx
 		mov     qword[rsp + 824], rax     ; Push variable onto stack
 		mov     rax, qword[rsp + 824]
 		mov     qword[rsp + 792], rax            ; Push variable onto stack
 		mov     rax, qword[rsp + 824]     ; return value stored in rax
 
-		jmp     cylinderVolumeCallDone
+		mov     rsp, rbp
+		pop     rbp                     ; Avoid stack alignment issues
+		ret
 
 cylinderVolumeDone:                                ; End of function call
 		mov     qword[rsp + 800], 114        ; Push variable onto stack
@@ -1224,12 +1237,28 @@ cylinderVolumeDone:                                ; End of function call
 		mov     qword[rsp + 816], 0        ; Push variable onto stack
 		mov     rax, qword[rsp + 808]
 		mov     qword[rsp + 880], rax            ; Push variable onto stack
+		mov     r8, qword[rsp + 880]
 		mov     rax, qword[rsp + 800]
 		mov     qword[rsp + 888], rax            ; Push variable onto stack
-		jmp     cylinderVolume                  ; call function
-cylinderVolumeCallDone:                                ; End of function call
+		mov     r9, qword[rsp + 888]
+		call    cylinderVolume                  ; call function
 		mov     qword[rsp + 824], rax     ; Push variable onto stack
 		mov     rax, qword[rsp + 824]
+		mov     qword[rsp + 816], rax            ; Push variable onto stack
+		mov     rax, qword[rsp + 816]  ; 64 bit value loading of data values only through rax
+		call    printInt
+		mov     qword[rsp + 880], 33        ; Push variable onto stack
+		mov     r8, qword[rsp + 880]
+		call    approxCircleArea                  ; call function
+		mov     qword[rsp + 824], rax     ; Push variable onto stack
+		mov     qword[rsp + 880], 44        ; Push variable onto stack
+		mov     r8, qword[rsp + 880]
+		mov     rax, qword[rsp + 824]
+		mov     qword[rsp + 888], rax            ; Push variable onto stack
+		mov     r9, qword[rsp + 888]
+		call    cylinderVolume                  ; call function
+		mov     qword[rsp + 832], rax     ; Push variable onto stack
+		mov     rax, qword[rsp + 832]
 		mov     qword[rsp + 816], rax            ; Push variable onto stack
 		mov     rax, qword[rsp + 816]  ; 64 bit value loading of data values only through rax
 		call    printInt

@@ -146,19 +146,19 @@ class File():
 
     def int_variable_assign_variable(self, offset1, offset2):
         self.f.writelines([
-                            '\t\tmov     rax, ' + offset2 + '\n'
+                            '\t\tmov     rax, ' + offset2 + '\n',
                             '\t\tmov     ' + offset1 + ', rax            ; Push variable onto stack\n'
                            ])
 
     def float_variable_assign(self, offset1, offset2):
         self.f.writelines([
-                            '\t\tmov     rax, __float64__(' + str(offset2) + ')\n'
+                            '\t\tmov     rax, __float64__(' + str(offset2) + ')\n',
                             '\t\tmov     ' + str(offset1) + ', rax       ; Push variable onto stack\n'
                            ])
 
     def float_variable_assign_var(self, offset1, offset2):
         self.f.writelines([
-                            '\t\tmov     rax, ' + str(offset2) + '\n'
+                            '\t\tmov     rax, ' + str(offset2) + '\n',
                             '\t\tmov     ' + str(offset1) + ', rax       ; Push variable onto stack\n'
                            ])
 
@@ -200,7 +200,8 @@ class File():
         self.f.writelines([
                             '\n\t\tjmp    ' + func_name + 'Done                     ; Skip over function definition\n',
                             func_name + ':                                ; Beginning of function call\n',
-                            '\n'
+                            '\t\tpush    rbp                     ; Avoid stack alignment isses\n',
+                            '\t\tmov     rbp, rsp\n'
                            ])             
 
     def function_return_int(self, val):
@@ -216,16 +217,22 @@ class File():
     def function_done(self, func_name):
         self.f.writelines([
                             '\n',
-                            '\t\tjmp     ' + func_name + 'CallDone\n',
+                            '\t\tmov     rsp, rbp\n',
+                            '\t\tpop     rbp                     ; Avoid stack alignment issues\n',
+                            '\t\tret\n',
                             '\n',
                             func_name + 'Done:                                ; End of function call\n'
                            ])
 
     def func_call(self, func_name):
         self.f.writelines([
-                            '\t\tjmp     ' + func_name + '                  ; call function\n',
-                            func_name + 'CallDone:                                ; End of function call\n'
-                           ])                            
+                            '\t\tcall    ' + func_name + '                  ; call function\n'
+                           ])     
+
+    def param_to_reg(self, reg, offset):
+        self.f.writelines([
+                            '\t\tmov     ' + reg + ', ' + offset + '\n'
+                           ])                          
 
     def check_stack_top(self, top, symbol_table):
         if isinstance(top[0], int) or isinstance(top[0], float):
@@ -274,13 +281,16 @@ class File():
 
             # stack to help process post-order tree
             stack = []
+            top1_stack = []
+            top2_stack = []
 
             self.prev_node = ''
             
             # process each line of the file
             for node in tree:
                 if node[0] in operators:
-                    top1 = self.check_stack_top(stack.pop(), symbol_table)
+                    top1_stack.append(stack.pop())
+                    top1 = self.check_stack_top(top1_stack[-1], symbol_table)
                     
                     if node[0] == 'print':
                         # check if constant value from stack
@@ -372,18 +382,25 @@ class File():
                         if self.type_flag == 'number':
                             num1 = top1
                         # check if variable that needs to pulled from symbol table
-                        elif self.type_flag == 'variable' or self.type_flag == 'param':
+                        elif self.type_flag == 'variable':
                             num1 = top1[0]
+                        elif self.type_flag == 'param':
+                            temp_param = int(top1_stack[-1][0][-1]) + 7
+                            num1 = 'r' + str(temp_param)
 
                         # get second value from stack
-                        top2 = self.check_stack_top(stack.pop(), symbol_table)
+                        top2_stack.append(stack.pop())
+                        top2 = self.check_stack_top(top2_stack[-1], symbol_table)
 
                         # check if constant value from stack
                         if self.type_flag == 'number':
                             num2 = top2
                         # check if variable that needs to pulled from symbol table
-                        elif self.type_flag == 'variable' or self.type_flag == 'param':
+                        elif self.type_flag == 'variable':
                             num2 = top2[0]
+                        elif self.type_flag == 'param':
+                            temp_param = int(top2_stack[-1][0][-1]) + 7
+                            num2 = 'r' + str(temp_param)
                         
                         # perform addition
                         if isinstance(top1, int) or isinstance(top1[0], int) or (isinstance(top1, tuple) and top1[1][0][0] in ['num', 'param']):
@@ -448,18 +465,25 @@ class File():
                         if self.type_flag == 'number':
                             num1 = top1
                         # check if variable that needs to pulled from symbol table
-                        elif self.type_flag == 'variable' or self.type_flag == 'param':
+                        elif self.type_flag == 'variable':
                             num1 = top1[0]
+                        elif self.type_flag == 'param':
+                            temp_param = int(top1_stack[-1][0][-1]) + 7
+                            num1 = 'r' + str(temp_param)                            
 
                         # get second value from stack
-                        top2 = self.check_stack_top(stack.pop(), symbol_table)
+                        top2_stack.append(stack.pop())
+                        top2 = self.check_stack_top(top2_stack[-1], symbol_table)
 
                         # check if constant value from stack
                         if self.type_flag == 'number':
                             num2 = top2
                         # check if variable that needs to pulled from symbol table
-                        elif self.type_flag == 'variable' or self.type_flag == 'param':
+                        elif self.type_flag == 'variable':
                             num2 = top2[0]
+                        elif self.type_flag == 'param':
+                            temp_param = int(top2_stack[-1][0][-1]) + 7
+                            num2 = 'r' + str(temp_param)                            
                         
                         # perform multiplication
                         if isinstance(top1, int) or isinstance(top1[0], int) or (isinstance(top1, tuple) and top1[1][0][0] in ['num', 'param']):
@@ -490,9 +514,13 @@ class File():
                         # check if variable that needs to pulled from symbol table
                         elif self.type_flag == 'variable' or self.type_flag == 'param':
                             num1 = top1[0]
+                        elif self.type_flag == 'param':
+                            temp_param = int(top1_stack[-1][0][-1]) + 7
+                            num1 = 'r' + str(temp_param)                            
 
                         # get second value from stack
-                        top2 = self.check_stack_top(stack.pop(), symbol_table)
+                        top2_stack.append(stack.pop())
+                        top2 = self.check_stack_top(top2_stack[-1], symbol_table)
 
                         # check if constant value from stack
                         if self.type_flag == 'number':
@@ -500,6 +528,9 @@ class File():
                         # check if variable that needs to pulled from symbol table
                         elif self.type_flag == 'variable' or self.type_flag == 'param':
                             num2 = top2[0]
+                        elif self.type_flag == 'param':
+                            temp_param = int(top2_stack[-1][0][-1]) + 7
+                            num2 = 'r' + str(temp_param)                            
                         
                         # perform division
                         if isinstance(top1, int) or isinstance(top1[0], int) or (isinstance(top1, tuple) and top1[1][0][0] in ['num', 'param']):
@@ -550,6 +581,9 @@ class File():
                             # stack top is a parameter location
                             else:
                                 self.int_variable_assign_variable('qword[rsp + ' + str(self.params_offset[i]) + ']', 'qword[rsp + ' + str(val) + ']')
+                            
+                            # move parameter to register location
+                            self.param_to_reg('r' + str(i + 8), 'qword[rsp + ' + str(self.params_offset[i]) + ']')
                             
                         # call function
                         self.func_call(node[0])

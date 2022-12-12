@@ -260,3 +260,6 @@ num cylinderHeight = 100
 num volume = 0
 volume = cylinderVolume(cylinderBaseArea, cylinderHeight)
 print(volume)
+
+volume = cylinderVolume(approxCircleArea(33), 44)
+print(volume)
